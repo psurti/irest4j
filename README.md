@@ -1,4 +1,5 @@
-  
+![Java CI with Gradle](https://github.com/psurti/crest4j/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+
 ## cREST4j client
 cREST ("connected REST") enables execution of dynamic sequence of REST calls connected to a server.
 For example, a sequence may look like: login, retrieve items and update an item. In this sequence a login call
