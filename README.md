@@ -3,8 +3,8 @@
 ## cREST4j client
 cREST ("connected REST") enables execution of dynamic sequence of REST calls connected to a server.
 For example, a sequence may look like: login, retrieve items and update an item. In this sequence a login call
-is performed via OAuth or Basic Auth then a GET REST call to retrieve a list of items. Using `jsonPath` 
-extract a specific `id` and use the extracted `id` in the REST call via dynamic substitution to update the item.
+is performed via OAuth or Basic Auth then a GET REST call to retrieve a list of items. Using `jsonPath` expressions to 
+extract a specific `id` crest4j can use the extracted `id` in the following REST call via dynamic substitution to update the item.
 
 ### Features
 - Ability drive sequence of calls using property files
