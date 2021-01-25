@@ -1,15 +1,15 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 
 import java.util.Map;
-import java.util.Properties;
 
-class GetAction extends RestAction {
+public class GetAction extends RestAction {
     public static final String NAME = "get";
 
-    public GetAction(String name, Properties properties) {
-        super(name, properties);
+    public GetAction(String name, IConfig config) {
+        super(name, config);
     }
 
     @Override

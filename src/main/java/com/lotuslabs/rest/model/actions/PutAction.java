@@ -1,19 +1,20 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
+public
 class PutAction extends RestAction {
     public static final String NAME = "put";
 
-    public PutAction(String name, Properties properties) {
-        super(name, properties);
+    public PutAction(String name, IConfig config) {
+        super(name, config);
     }
 
     @Override

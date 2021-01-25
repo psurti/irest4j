@@ -1,17 +1,18 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
+public
 class FormPostAction extends RestAction {
     public static final String NAME = "form";
 
-    public FormPostAction(String name, Properties properties) {
-        super(name, properties);
+    public FormPostAction(String name, IConfig config) {
+        super(name, config);
     }
 
     @Override

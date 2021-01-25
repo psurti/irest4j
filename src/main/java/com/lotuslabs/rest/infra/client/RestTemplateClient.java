@@ -2,6 +2,7 @@ package com.lotuslabs.rest.infra.client;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonFormatter;
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import com.lotuslabs.rest.model.JsonPathParam;
 import com.lotuslabs.rest.model.actions.RestAction;
@@ -42,15 +43,13 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     public static final String X_CSRF_HEADER = "X-CSRF-HEADER";
     private String xCsrfToken;
 
-    public RestTemplateClient(String bearer,
-                              String basic,
-                              String consulToken, String pretty, Map<String, String> initialContext) {
-        this.bearer = bearer;
-        this.basic = basic;
-        this.consulToken = consulToken;
-        this.initialContext = initialContext;
+    public RestTemplateClient(IConfig config) {
+        this.bearer = config.getBearer();
+        this.basic = config.getBasicAuth();
+        this.consulToken = config.getConsulToken();
+        this.initialContext = config.getContext();
+        this.pretty = config.isPretty();
         this.restTemplate = new RestTemplate();
-        this.pretty = Boolean.valueOf(pretty);
         configureMessageConverters();
         configureClientHttpRequestFactory();
     }

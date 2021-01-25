@@ -1,5 +1,6 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import com.lotuslabs.rest.model.JsonPathParam;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +9,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -27,21 +28,15 @@ public abstract class RestAction {
     private final String host;
     private static final Pattern templates = Pattern.compile("\\{\\{([A-Za-z0-9.]+)(:*)([A-Za-z0-9.]*)\\}\\}");
 
-    public RestAction(String name, Properties properties) {
+    public RestAction(String name, IConfig config) {
         super();
         this.name = name;
-        host = properties.getProperty("host");
-
-        /* -- namespaced properties */
-        final String pathProperty = properties.getProperty(name + ".path");
-        Objects.requireNonNull(pathProperty, name + ".path property is required");
-        path = pathProperty.trim();
-        encode = Boolean.parseBoolean(properties.getProperty(name + ".encodeUrl", "true"));
-        encodePath = Boolean.parseBoolean(properties.getProperty(name + ".encodePath", "false"));
-
-        body = getBody(properties.getProperty(name + ".body"),
-                properties.getProperty("propertyPath", "."));
-        jsonPathParams = JsonPathParam.valueOf(name, properties);
+        host = config.getHost();
+        path = config.getPath(name);
+        encode = config.isEncodeUrl(name);
+        encodePath = config.isEncodePath(name);
+        body = config.getBody(name);
+        jsonPathParams = config.getJsonExps(name);
     }
 
     private String substituteVariables(Map<String, Object> context, String data) {
@@ -79,18 +74,6 @@ public abstract class RestAction {
         return UriComponentsBuilder.fromUriString(url).build(encode).toUri();
     }
 
-
-    private String getBody(String body, String propertiesPath) {
-        if (body != null && body.endsWith(".json")) {
-            try {
-                body = new String(Files.readAllBytes(Paths.get(propertiesPath, body)));
-            } catch (IOException e) {
-                log.error(e.getLocalizedMessage(), e);
-            }
-        }
-        return body;
-    }
-
     /*
     TODO: This custom logic is for a specific case so move it out in the future
      */
@@ -114,10 +97,6 @@ public abstract class RestAction {
 
     public abstract Map<String,?> execute(Map<String, Object> context,
                                           IRestClient<Map<String,?>, String> restClient) throws IOException;
-
-    public String getName() {
-        return name;
-    }
 
     public Object getBody() {
         return body;

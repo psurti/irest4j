@@ -1,15 +1,15 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 
 import java.util.Map;
-import java.util.Properties;
 
-class DeleteAction extends RestAction {
+public class DeleteAction extends RestAction {
     public static final String NAME = "delete";
 
-    public DeleteAction(String name, Properties properties) {
-        super(name, properties);
+    public DeleteAction(String name, IConfig config) {
+        super(name, config);
     }
 
     public Map<String,?> execute(Map<String, Object> context,

@@ -1,17 +1,18 @@
 package com.lotuslabs.rest.model.actions;
 
+import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
-import java.util.Properties;
 
 @Slf4j
+public
 class PostAction extends RestAction {
     public static final String NAME = "post";
 
-    public PostAction(String name, Properties properties) {
-        super(name, properties);
+    public PostAction(String name, IConfig config) {
+        super(name, config);
     }
 
     @Override
