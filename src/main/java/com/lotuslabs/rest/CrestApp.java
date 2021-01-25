@@ -3,7 +3,7 @@ package com.lotuslabs.rest;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.lotuslabs.rest.infra.client.RestTemplateClient;
-import com.lotuslabs.rest.infra.client.infra.config.PropertiesConfig;
+import com.lotuslabs.rest.infra.config.PropertiesConfig;
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.model.actions.RestAction;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.lotuslabs.rest.infra.client.infra.config;
+package com.lotuslabs.rest.infra.config;
 
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.model.JsonPathParam;
