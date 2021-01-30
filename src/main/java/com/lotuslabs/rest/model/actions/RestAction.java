@@ -116,6 +116,10 @@ public abstract class RestAction {
                 .toString();
     }
 
+    protected JsonPathParam[] getAccessTokenJsonPathParam() {
+        return new JsonPathParam[] {JsonPathParam.valueOf("bearer", "$.access_token")};
+    }
+
     public JsonPathParam[] getJsonPathParams() {
         return jsonPathParams;
     }
