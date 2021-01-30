@@ -3,6 +3,7 @@ package com.lotuslabs.rest;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.lotuslabs.rest.infra.client.RestTemplateClient;
+import com.lotuslabs.rest.infra.config.ConfigFactory;
 import com.lotuslabs.rest.infra.config.PropertiesConfig;
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.model.actions.RestAction;
@@ -37,7 +38,7 @@ public class CrestApp {
             System.exit(0);
         }
         String propertyFile = args[0];
-        PropertiesConfig config = PropertiesConfig.create(propertyFile);
+        PropertiesConfig config = ConfigFactory.create(propertyFile);
         CrestApp app = new CrestApp(config);
         app.executeAll();
     }

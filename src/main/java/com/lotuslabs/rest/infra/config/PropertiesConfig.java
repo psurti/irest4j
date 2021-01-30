@@ -17,24 +17,25 @@ import java.util.stream.Collectors;
 public class PropertiesConfig implements IConfig {
     private final Properties properties;
 
-    static public PropertiesConfig create(String propertyFile) throws IOException {
+    static PropertiesConfig create(String propertyFile) throws IOException {
         Properties p = new Properties();
         try(FileReader fr = new FileReader(propertyFile)) {
             p.load(fr);
-            String propertyPath = ".";
-            final Path parent = Paths.get(propertyFile).getParent();
-            if (parent != null) {
-                propertyPath = parent.toString();
-            }
-            p.setProperty("propertyPath", propertyPath + "/");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        log.info("settings:{}", p);
-        return new PropertiesConfig(p);
+        final Path parent = Paths.get(propertyFile).getParent();
+        return new PropertiesConfig(parent, p);
     }
 
-    PropertiesConfig(Properties properties) {
+    PropertiesConfig(Path parent, Properties properties) {
+        if (properties == null)
+            properties = new Properties();
+        String propertyPath = ".";
+        if (parent != null) {
+            propertyPath = parent.toString();
+        }
+        properties.setProperty("propertyPath", propertyPath + "/");
+
+        log.info("settings:{}", properties);
         this.properties = properties;
     }
 
@@ -58,11 +59,31 @@ public class PropertiesConfig implements IConfig {
         return Boolean.parseBoolean(properties.getProperty("pretty", "false"));
     }
 
+    private String[] getActionValues() {
+        String[] ret;
+        String actions = properties.getProperty("actions");
+        if (actions == null) {
+            List<String> values = new ArrayList<>();
+            //try to check if actions are in format actions[0], actions[1]...
+            int i = 0;
+            do {
+                actions = properties.getProperty("actions[" + (i++) + "]");
+                if (actions != null) {
+                    values.add(actions);
+                }
+            } while (actions != null);
+            ret = values.toArray(new String[0]);
+        } else {
+            ret = properties.getProperty("actions").split(",");
+        }
+        return ret;
+    }
+
     @Override
     public RestAction[] getActions() {
         List<RestAction> actions = new ArrayList<>();
         //-- Actions
-        final String[] propertyNames = properties.getProperty("actions").split(",");
+        final String[] propertyNames = getActionValues();
         final StringBuilder builder = new StringBuilder();
         for (String action : propertyNames) {
             RestAction restAction = null;

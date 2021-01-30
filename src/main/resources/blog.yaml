@@ -1,0 +1,18 @@
+actions:
+  - getAllPosts
+  - getPostUser
+  - postNewBlogPost
+getAllPosts:
+  jsonPath:
+    userOfPost: $[?(@.title == 'laboriosam dolor voluptates')].userId
+  path: /posts
+getPostUser:
+  jsonPath:
+    username: $.username
+  path: /users/{{userOfPost}}
+host: https://jsonplaceholder.typicode.com
+postNewBlogPost:
+  body: newBlogPost.json
+  jsonPath:
+    createdId: $.id
+  path: /posts
