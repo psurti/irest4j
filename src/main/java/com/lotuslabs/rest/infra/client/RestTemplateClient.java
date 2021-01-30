@@ -4,7 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonFormatter;
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
-import com.lotuslabs.rest.model.JsonPathParam;
+import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.actions.RestAction;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONValue;
@@ -179,14 +179,14 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
 
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> parseJsonStringToMap(ResponseEntity<String> responseEntity, JsonPathParam... params) {
+    public Map<String, Object> parseJsonStringToMap(ResponseEntity<String> responseEntity, NamedJsonPathExpression... params) {
         log.info("{}", (Boolean.TRUE.equals(pretty) && responseEntity.getBody() != null) ?
                 JsonFormatter.prettyPrint(responseEntity.getBody()) :
                 responseEntity.getBody());
         final HttpHeaders headers = responseEntity.getHeaders();
         final LinkedHashMap<String, Object> ret = new LinkedHashMap<>();
         if (responseEntity.getBody() != null) {
-            for (JsonPathParam param : params) {
+            for (NamedJsonPathExpression param : params) {
                 String responseBody = responseEntity.getBody();
                 Object val = JsonPath.parse(responseBody).read(param.getJsonPath());
                 if (val != null) {
@@ -220,40 +220,40 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
 
 
     @Override
-    public Map<String, ?> delete(URI finalUri, JsonPathParam... jsonPathParams) {
+    public Map<String, ?> delete(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createDeleteRequestEntity(finalUri).build(),
                 String.class);
-        return parseJsonStringToMap(responseEntity, jsonPathParams);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> formPost(URI finalUri, String body, JsonPathParam... jsonPathParams) {
+    public Map<String, ?> formPost(URI finalUri, String body, NamedJsonPathExpression... namedJsonPathExpressions) {
         final RequestEntity<?> formPostRequestEntity = createFormPostRequestEntity(finalUri, body);
         final ResponseEntity<String> responseEntity = exchange(formPostRequestEntity, String.class);
-        return parseJsonStringToMap( responseEntity, jsonPathParams);
+        return parseJsonStringToMap( responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> put(URI finalUri, String body, String eTag, JsonPathParam... jsonPathParams) {
+    public Map<String, ?> put(URI finalUri, String body, String eTag, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createPutRequestEntity(finalUri, body, eTag),
                 String.class);
-        return parseJsonStringToMap(responseEntity, jsonPathParams);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public  Map<String, ?> get(URI finalUri, JsonPathParam... jsonPathParams) {
+    public  Map<String, ?> get(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createGetRequestEntity(finalUri).build(),
                 String.class);
-        return parseJsonStringToMap(responseEntity, jsonPathParams);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> post(URI finalUri, String body, JsonPathParam... jsonPathParams) {
+    public Map<String, ?> post(URI finalUri, String body, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createPostRequestEntity(finalUri, body), String.class);
-        return parseJsonStringToMap(responseEntity, jsonPathParams);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 }

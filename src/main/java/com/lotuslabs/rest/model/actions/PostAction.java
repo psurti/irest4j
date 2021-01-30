@@ -18,7 +18,7 @@ class PostAction extends RestAction {
     @Override
     public Map<String,?> execute(Map<String, Object> context,
                                  IRestClient<Map<String,?>, String> restClient) {
-        return restClient.post(getURI(context), getBodyString(context), getJsonPathParams());
+        return restClient.post(getURI(context), getBodyString(context), getNamedJsonPathExpression());
     }
 }
 

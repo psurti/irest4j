@@ -18,6 +18,6 @@ class FormPostAction extends RestAction {
     @Override
     public Map<String,?> execute(Map<String, Object> context,
                                  IRestClient<Map<String,?>, String> restClient) {
-        return restClient.formPost(getURI(context), getBody().toString(), getJsonPathParams());
+        return restClient.formPost(getURI(context), getBody().toString(), getNamedJsonPathExpression());
     }
 }

@@ -14,6 +14,6 @@ public class DeleteAction extends RestAction {
 
     public Map<String,?> execute(Map<String, Object> context,
                                  IRestClient<Map<String,?>, String> restClient) {
-        return restClient.delete(getURI(context), getJsonPathParams());
+        return restClient.delete(getURI(context), getNamedJsonPathExpression());
     }
 }

@@ -1,7 +1,7 @@
 package com.lotuslabs.rest.infra.config;
 
 import com.lotuslabs.rest.interfaces.IConfig;
-import com.lotuslabs.rest.model.JsonPathParam;
+import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.actions.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -155,16 +155,16 @@ public class PropertiesConfig implements IConfig {
     }
 
     @Override
-    public JsonPathParam[] getJsonExps(String name) {
-        List<JsonPathParam> ret = new ArrayList<>();
+    public NamedJsonPathExpression[] getJsonExps(String name) {
+        List<NamedJsonPathExpression> ret = new ArrayList<>();
         properties.forEach( (k, v) -> {
             final int index = k.toString().indexOf(name + ".jsonPath.");
             if (index >= 0) {
                 final String jsonPathLabel = k.toString().substring((name + ".jsonPath.").length());
-                ret.add(JsonPathParam.valueOf(jsonPathLabel, v.toString()));
+                ret.add(NamedJsonPathExpression.valueOf(jsonPathLabel, v.toString()));
             }
         });
-        return ret.toArray(new JsonPathParam[0]);
+        return ret.toArray(new NamedJsonPathExpression[0]);
     }
 
     @Override

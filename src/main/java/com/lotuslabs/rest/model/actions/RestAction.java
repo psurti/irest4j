@@ -2,7 +2,7 @@ package com.lotuslabs.rest.model.actions;
 
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
-import com.lotuslabs.rest.model.JsonPathParam;
+import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -22,7 +22,7 @@ public abstract class RestAction {
     private final String path;
     private final String name;
     private final Object body;
-    private final JsonPathParam[] jsonPathParams;
+    private final NamedJsonPathExpression[] namedJsonPathExpressions;
     private final boolean encodePath;
     private final boolean encode;
     private final String host;
@@ -36,7 +36,7 @@ public abstract class RestAction {
         encode = config.isEncodeUrl(name);
         encodePath = config.isEncodePath(name);
         body = config.getBody(name);
-        jsonPathParams = config.getJsonExps(name);
+        namedJsonPathExpressions = config.getJsonExps(name);
     }
 
     private String substituteVariables(Map<String, Object> context, String data) {
@@ -116,12 +116,12 @@ public abstract class RestAction {
                 .toString();
     }
 
-    protected JsonPathParam[] getAccessTokenJsonPathParam() {
-        return new JsonPathParam[] {JsonPathParam.valueOf("bearer", "$.access_token")};
+    protected NamedJsonPathExpression[] getAccessTokenJsonPathExpression() {
+        return new NamedJsonPathExpression[] {NamedJsonPathExpression.valueOf("bearer", "$.access_token")};
     }
 
-    public JsonPathParam[] getJsonPathParams() {
-        return jsonPathParams;
+    public NamedJsonPathExpression[] getNamedJsonPathExpression() {
+        return namedJsonPathExpressions;
     }
 
     private interface QueryVisitor<T> {

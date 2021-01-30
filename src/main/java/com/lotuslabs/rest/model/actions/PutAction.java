@@ -21,7 +21,7 @@ class PutAction extends RestAction {
     public Map<String,?> execute(Map<String, Object> context,
                                  IRestClient<Map<String,?>, String> restClient){
         String eTag = getETag(context);
-        return restClient.put(getURI(context), getBodyString(context), eTag, getJsonPathParams());
+        return restClient.put(getURI(context), getBodyString(context), eTag, getNamedJsonPathExpression());
     }
 
     private String getETag(Map<String,Object> context) {

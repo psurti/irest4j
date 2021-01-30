@@ -15,6 +15,6 @@ public class GetAction extends RestAction {
     @Override
     public Map<String,?> execute(Map<String, Object> context,
                                  IRestClient<Map<String,?>, String> restClient) {
-        return restClient.get(getURI(context), getJsonPathParams());
+        return restClient.get(getURI(context), getNamedJsonPathExpression());
     }
 }

@@ -1,6 +1,6 @@
 package com.lotuslabs.rest.interfaces;
 
-import com.lotuslabs.rest.model.JsonPathParam;
+import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.actions.RestAction;
 
 import java.util.Map;
@@ -17,5 +17,5 @@ public interface IConfig {
     boolean isEncodeUrl(String name);
     boolean isEncodePath(String name);
     String getBody(String name);
-    JsonPathParam[] getJsonExps(String name);
+    NamedJsonPathExpression[] getJsonExps(String name);
 }
