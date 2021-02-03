@@ -155,16 +155,29 @@ public class PropertiesConfig implements IConfig {
     }
 
     @Override
-    public NamedJsonPathExpression[] getJsonExps(String name) {
-        List<NamedJsonPathExpression> ret = new ArrayList<>();
+    public Map<String, NamedJsonPathExpression> getJsonExps(String name) {
+        Map<String, NamedJsonPathExpression> ret = new LinkedHashMap<>();
         properties.forEach( (k, v) -> {
-            final int index = k.toString().indexOf(name + ".jsonPath.");
+            final String key = k.toString();
+            final int index = key.indexOf(name + ".jsonPath.");
+            log.info (name  + ":" + index);
             if (index >= 0) {
-                final String jsonPathLabel = k.toString().substring((name + ".jsonPath.").length());
-                ret.add(NamedJsonPathExpression.valueOf(jsonPathLabel, v.toString()));
+                String id = (key.endsWith(".expect")) ? key.substring(0, key.length()-7) : key;
+                NamedJsonPathExpression expression = ret.get(id);
+                if (expression == null) {
+                    expression = new NamedJsonPathExpression();
+                }
+
+                if (key.endsWith(".expect")) {
+                    expression.setExpectedValue(v.toString());
+                } else {
+                    final String jsonPathLabel = key.substring((name + ".jsonPath.").length());
+                    expression.setJsonPath(v.toString()).setJsonPathLabel(jsonPathLabel);
+                }
+                ret.put(id, expression);
             }
         });
-        return ret.toArray(new NamedJsonPathExpression[0]);
+        return ret;
     }
 
     @Override

@@ -22,7 +22,7 @@ public abstract class RestAction {
     private final String path;
     private final String name;
     private final Object body;
-    private final NamedJsonPathExpression[] namedJsonPathExpressions;
+    private final Map<String, NamedJsonPathExpression> namedJsonPathExpressions;
     private final boolean encodePath;
     private final boolean encode;
     private final String host;
@@ -121,7 +121,7 @@ public abstract class RestAction {
     }
 
     public NamedJsonPathExpression[] getNamedJsonPathExpression() {
-        return namedJsonPathExpressions;
+        return namedJsonPathExpressions.values().toArray(new NamedJsonPathExpression[0]);
     }
 
     private interface QueryVisitor<T> {

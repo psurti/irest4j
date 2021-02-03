@@ -17,5 +17,5 @@ public interface IConfig {
     boolean isEncodeUrl(String name);
     boolean isEncodePath(String name);
     String getBody(String name);
-    NamedJsonPathExpression[] getJsonExps(String name);
+    Map<String, NamedJsonPathExpression> getJsonExps(String name);
 }

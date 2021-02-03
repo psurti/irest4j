@@ -196,7 +196,11 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                         //Flatten array of 1
                         val = ((List<?>) val).get(0);
                     }
-                    ret.put(param.getJsonPathLabel(), String.valueOf(val));
+                    String strVal = String.valueOf(val);
+                    if (!param.checkValue(strVal)) {
+                        log.info("Mismatch of actual:{} with expected:{}", strVal, param.getExpectedValue() );
+                    }
+                    ret.put(param.getJsonPathLabel(), strVal);
                 }
             }
         }

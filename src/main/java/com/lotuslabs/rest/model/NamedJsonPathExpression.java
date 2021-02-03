@@ -3,19 +3,20 @@ package com.lotuslabs.rest.model;
 public class NamedJsonPathExpression {
     private String jsonPath;
     private String jsonPathLabel;
+    private String expectedValue;
 
-    private NamedJsonPathExpression() {}
+    public NamedJsonPathExpression() {}
 
     public static NamedJsonPathExpression valueOf(String jsonPathLabel, String jsonPath) {
         return new NamedJsonPathExpression().setJsonPath(jsonPath).setJsonPathLabel(jsonPathLabel);
     }
     
-    private NamedJsonPathExpression setJsonPath(String jsonPath) {
+    public NamedJsonPathExpression setJsonPath(String jsonPath) {
         this.jsonPath = jsonPath;
         return this;
     }
 
-    private NamedJsonPathExpression setJsonPathLabel(String jsonPathLabel) {
+    public NamedJsonPathExpression setJsonPathLabel(String jsonPathLabel) {
         this.jsonPathLabel = jsonPathLabel;
         return this;
     }
@@ -26,5 +27,18 @@ public class NamedJsonPathExpression {
 
     public String getJsonPathLabel() {
         return jsonPathLabel;
+    }
+
+    public NamedJsonPathExpression setExpectedValue(String expectedValue) {
+        this.expectedValue = expectedValue;
+        return this;
+    }
+
+    public boolean checkValue(String actualValue) {
+        return actualValue != null && actualValue.equals(this.expectedValue);
+    }
+
+    public String getExpectedValue() {
+        return this.expectedValue;
     }
 }
