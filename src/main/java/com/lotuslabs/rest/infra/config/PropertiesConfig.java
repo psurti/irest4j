@@ -160,7 +160,6 @@ public class PropertiesConfig implements IConfig {
         properties.forEach( (k, v) -> {
             final String key = k.toString();
             final int index = key.indexOf(name + ".jsonPath.");
-            log.info (name  + ":" + index);
             if (index >= 0) {
                 String id = (key.endsWith(".expect")) ? key.substring(0, key.length()-7) : key;
                 NamedJsonPathExpression expression = ret.get(id);
