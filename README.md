@@ -1,16 +1,17 @@
 ![Java CI with Gradle](https://github.com/psurti/crest4j/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
 ![CodeQL](https://github.com/psurti/crest4j/workflows/CodeQL/badge.svg)
+
 ## iREST4j client
-iREST ("integration REST") enables execution of dynamic sequence of REST calls connected to a server.
-For example, a sequence may look like: login, retrieve items and update an item. In this sequence a login call
-is performed via OAuth or Basic Auth then a GET REST call to retrieve a list of items. Using `jsonPath` expressions to 
-extract a specific `id` crest4j can use the extracted `id` in the following REST call via dynamic substitution to update the item.
+iREST4j ("*integration* REST") is a java tool that allows execution of a sequence of REST calls to a server. A REST sequence can be Login (OAuth/Basic Auth), GET (call to retrieve a list of items) and POST (call to update an item given parameters from the previous call). iREST4j inter-connects REST calls by passing extracted parameters from a previous call and provide variable subsititions on the following REST calls by sharing context in a sequence. 
 
 ### Features
-- Ability drive sequence of calls using property files
+- Ability drive sequence of calls using property or YAML files
 - Ability to assign variables of extract data from responses using `jsonPath` expressions
 - Ability to substitute variables at runtime on other REST calls in the sequence
 - Ability to pass contextual data across REST calls.
+
+### Future
+- Support HTTPs
 
 ## Getting Started
 
