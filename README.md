@@ -1,6 +1,6 @@
 ![Java CI with Gradle](https://github.com/psurti/crest4j/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
 ![CodeQL](https://github.com/psurti/crest4j/workflows/CodeQL/badge.svg)
-<img src="doc/logo/iDino2.png" width="30%"  height="30%" style="float: left" align="left">
+<img src="doc/logo/iDino2.png" width="25%"  height="25%" style="float: left" align="left">
 ## iREST4j client
 iREST4j ("*integration* REST") is a java tool that allows execution of a sequence of REST calls to a server. A REST sequence can be Login (OAuth/Basic Auth), GET (call to retrieve a list of items) and POST (call to update an item given parameters from the previous call). iREST4j inter-connects REST calls by passing extracted parameters from a previous call and provide variable subsititions on the following REST calls by sharing context in a sequence. 
 
@@ -28,15 +28,9 @@ java -jar irest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
 # eg. java -jar build\libs\crest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
 ```
 
-### Running unit tests
+### Description of contents of a properties/yaml file
+Please see `blog.properties` or `blog.yaml` for an example. 
 
-### Running integration tests
-
-### Using iREST
-#### Defining a `Properties` file
-See `blog.properties` for an example. 
-
-The property file consists of main property values.
 
 Property Name | Description | Example
 :----- | :---- | :-----
