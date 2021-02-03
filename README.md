@@ -1,6 +1,6 @@
 ![Java CI with Gradle](https://github.com/psurti/crest4j/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
 ![CodeQL](https://github.com/psurti/crest4j/workflows/CodeQL/badge.svg)
-
+![iDino logo](doc/logo/iDino.png)
 ## iREST4j client
 iREST4j ("*integration* REST") is a java tool that allows execution of a sequence of REST calls to a server. A REST sequence can be Login (OAuth/Basic Auth), GET (call to retrieve a list of items) and POST (call to update an item given parameters from the previous call). iREST4j inter-connects REST calls by passing extracted parameters from a previous call and provide variable subsititions on the following REST calls by sharing context in a sequence. 
 
