@@ -40,14 +40,14 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-mainClassName = 'com.lotuslabs.rest.CrestApp'
+mainClassName = 'com.lotuslabs.rest.IRestApp'
 
 jar {
     manifest {
-       attributes 'Main-Class': 'com.lotuslabs.rest.CrestApp'
+       attributes 'Main-Class': 'com.lotuslabs.rest.IRestApp'
     }
 }
 
 bootJar {
-    mainClassName = 'com.lotuslabs.rest.CrestApp'
+    mainClassName = 'com.lotuslabs.rest.IRestApp'
 }
