@@ -25,12 +25,13 @@ gradlew clean bootJar
 ### Running the tool
 ```
 java -jar irest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
-# eg. java -jar build\libs\crest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
+# eg. java -jar build\libs\irest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
 ```
 
 ### Description of contents of a properties/yaml file
 Please see `blog.properties` or `blog.yaml` for an example. 
 
+Property `host`
 
 Property Name | Description | Example
 :----- | :---- | :-----
