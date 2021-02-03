@@ -10,7 +10,7 @@ iREST4j ("*integration* REST") is a java tool that allows execution of a sequenc
 - Ability to substitute variables at runtime on other REST calls in the sequence
 - Ability to pass contextual data across REST calls.
 
-### Future
+### TODOs
 - Support HTTPs
 
 ## Getting Started
