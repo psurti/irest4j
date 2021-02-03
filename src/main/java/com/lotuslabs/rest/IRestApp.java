@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClientResponseException;
 import java.io.IOException;
 
 @Slf4j
-public class CrestApp {
+public class IRestApp {
     private final RestTemplateClient client;
     private final RestAction[] actions;
     static {
@@ -22,7 +22,7 @@ public class CrestApp {
         loggerFactory.getLogger("com.jayway.jsonpath").setLevel(Level.INFO);
     }
 
-    public CrestApp(IConfig config ) {
+    public IRestApp(IConfig config ) {
         //-- Client
         client = new RestTemplateClient(config);
         actions = config.getActions();
@@ -39,13 +39,13 @@ public class CrestApp {
         }
         String propertyFile = args[0];
         PropertiesConfig config = ConfigFactory.create(propertyFile);
-        CrestApp app = new CrestApp(config);
+        IRestApp app = new IRestApp(config);
         app.executeAll();
     }
 
     public static void main(String[] args) {
         try {
-            CrestApp.run(args);
+            IRestApp.run(args);
         } catch (RestClientResponseException e ) {
             log.error(e.getResponseBodyAsString(), e);
         } catch (IOException e) {
