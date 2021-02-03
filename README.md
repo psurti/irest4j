@@ -23,7 +23,7 @@ gradlew clean bootJar
 
 ### Running the tool
 ```
-java -jar crest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
+java -jar irest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
 # eg. java -jar build\libs\crest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
 ```
 
