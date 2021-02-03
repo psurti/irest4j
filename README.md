@@ -31,7 +31,7 @@ java -jar crest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
 
 ### Running integration tests
 
-### Using cREST
+### Using iREST
 #### Defining a `Properties` file
 See `blog.properties` for an example. 
 
