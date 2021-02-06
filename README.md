@@ -83,13 +83,12 @@ getAllItems.jsonPath.userId=$[?(@.title == 'laboriosam dolor voluptates')].userI
 getAllItems.jsonPath.user.id=$..id
 ```
 
-Property Name | Description | Example
-:----- | :---- | :-----
-path   | The REST endpoint to call. In the example `item.id` is a variable that is defined and will be substituted in the URL | getItem.path=/items/{{item.id}} or path=/items/10
-jsonPath.{name}| Assign a variable `name` after evaluating the REST response with JsonPath expression. Please refer to [JsonPath expressions](http://jsonpath.com)|getAllItems.jsonPath.userId=$[?(@.title == 'laboriosam dolor voluptates')].userId or getAllItems.jsonPath.user.id=$..id
-encodeUrl| URI encode the entire URL by setting `true` or `false` (default)| postNewBlog.encodeUrl=true
+Property **encodeUrl** performs URI encoding on the entire URL. It can be enabled/disabled by setting `true` or `false` (default) respectively. 
 
-#### Builtin behaviour
+**Example:**
+```properties
+postNewBlog.encodeUrl=true
+```
 
 #### Other tools
 https://github.com/Kortex/jrest-client/
