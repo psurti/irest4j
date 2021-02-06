@@ -70,9 +70,10 @@ For each REST action in the actions list above, these properties are specific to
 Property **path** represents a static of dynamic URI endpoint to call. Additionally, URI can have parameters. Variables are dynamically substituted.
 
 **Example:**
+```properties
 getItem.path=/items/{{item.id}}
 getItem.path=/items/10
-
+```
 
 Property Name | Description | Example
 :----- | :---- | :-----
