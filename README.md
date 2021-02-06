@@ -29,6 +29,7 @@ java -jar irest4j-x.y.jar <path-to-properties-file>
 ```
 
 ### Configuration Properties
+#### Global Level
 Configuration can be specified using YAML or properties file. Please see `blog.properties` or `blog.yaml` for examples. 
 
 Property **host** is the URL used to identify the REST server. 
@@ -63,8 +64,7 @@ ctx.foo=bar
 ctx.page=5
 getBlogPosts.path=/posts/{{ctx.seqid}}
 ```
-
-
+#### Request/Response Level
 For each REST action in the actions list above these properties are specific to the endpoint:
 
 Property Name | Description | Example
