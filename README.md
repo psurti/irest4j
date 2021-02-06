@@ -52,7 +52,7 @@ Property **pretty** outputs JSON responses in a well-indented format. The valid 
 pretty=true
 ```
 
-Property **ctx** is an application context used for assigning constant values to variable names. Using format "{{ .. }}",  these variables are substituted on request calls. 
+Property **ctx** is an application context used for assigning constant values to user-defined variable names. Using format "{{ .. }}",  these variables are substituted on request calls. 
 
 There is also a built-in variable part of the context such as:
 "ctx.seqid ": This is an auto-sequence generated number for unique identifiers during request calls.
