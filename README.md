@@ -25,7 +25,7 @@ gradlew clean bootJar
 ### Running the tool
 ```
 java -jar irest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
-# eg. java -jar build\libs\irest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
+# eg. java -jar build\libs\irest4j-x.y.jar build\resources\main\blog.properties
 ```
 
 ### Configuration Properties
