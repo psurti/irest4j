@@ -28,18 +28,42 @@ java -jar irest4j-1.0-SNAPSHOT.jar <path-to-properties-file>
 # eg. java -jar build\libs\irest4j-1.0-SNAPSHOT.jar build\resources\main\blog.properties
 ```
 
-### Description of contents of a properties/yaml file
-Please see `blog.properties` or `blog.yaml` for an example. 
+### Configuration Properties
+Configuration can be specified using YAML or properties file. Please see `blog.properties` or `blog.yaml` for examples. 
 
-Property `host`
+Property **host** is the URL used to identify the REST server. 
 
-Property Name | Description | Example
-:----- | :---- | :-----
-host   |  HTTP url of the server | host=https://httpbin.org
-actions | Comma-separated list of REST actions. REST actions are names prefixed with `get`,`login`, `post`, `put`, `delete`, `form` | actions=login,getAllItems,putItem
-pretty | Ouput JSON data in well-indented format. Valid values are `true` or `false`| pretty=true |
-ctx | Define constant values to  variable names that can be substituted in the requests. See example | ctx.foo=bar or ctx.step=5
-ctx.seqid | This is a builtin sequence number variable that can be substiuted in other REST calls| getPost.path=/posts/{{ctx.seqId}}
+**Example:**
+```properties
+host=https://httpbin.org:80
+```
+
+Property **actions** is a list of REST actions to execute in the order defined. The name of the actions are user-defined and must prefix with: "get" , "post" , "put" , "delete" , or  "form". The prefixes "get", "post", "put", "delete" map to HTTP GET, HTTP POST, HTTP PUT and HTTP DELETE operations. Prefix "form" is for form-based POST requests that does "application/x-www-form-url-encoded" encoding automatically. A built-in "login" action is also supported that enables OAuth and Basic Authentication using authorization "Bearer" and "Basic" headers.
+
+**Example:**
+```properties
+actions=login, getAllItems, putItem
+```
+
+Property **pretty** outputs JSON responses in a well-indented format. The valid values are true or false (default).
+
+**Example:**
+```properties
+pretty=true
+```
+
+Property **ctx** is an application context used for assigning constant values to variable names. Using format "{{ .. }}",  these variables are substituted on request calls. 
+
+There is also a built-in variable part of the context such as:
+"ctx.seqid ": This is an auto-sequence generated number for unique identifiers during request calls.
+
+**Example:**
+```properties
+ctx.foo=bar 
+ctx.page=5
+getBlogPosts.path=/posts/{{ctx.seqid}}
+```
+
 
 For each REST action in the actions list above these properties are specific to the endpoint:
 
