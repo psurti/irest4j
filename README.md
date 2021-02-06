@@ -42,7 +42,7 @@ Property **actions** is a list of REST actions to execute in the order defined. 
 
 **Example:**
 ```properties
-actions=login, getAllItems, putItem
+actions=login,getAllItems,putItem
 ```
 
 Property **pretty** outputs JSON responses in a well-indented format. The valid values are true or false (default).
