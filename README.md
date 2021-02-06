@@ -75,6 +75,14 @@ getItem.path=/items/{{item.id}}
 getItem.path=/items/10
 ```
 
+Property **jsonPath.{user-defined variable name}** evaluates JsonPath expression and assign to the user-defined variable. Variables can have multiple dot notations, as shown in the examples. Please refer to JsonPath expressions for more information.
+
+**Example:**
+```properties
+getAllItems.jsonPath.userId=$[?(@.title == 'laboriosam dolor voluptates')].userId 
+getAllItems.jsonPath.user.id=$..id
+```
+
 Property Name | Description | Example
 :----- | :---- | :-----
 path   | The REST endpoint to call. In the example `item.id` is a variable that is defined and will be substituted in the URL | getItem.path=/items/{{item.id}} or path=/items/10
