@@ -38,7 +38,7 @@ Property **host** is the URL used to identify the REST server.
 host=https://httpbin.org:80
 ```
 
-Property **actions** is a list of REST actions to execute in the order defined. The name of the actions are user-defined and must prefix with: "get" , "post" , "put" , "delete" , or  "form". The prefixes "get", "post", "put", "delete" map to HTTP GET, HTTP POST, HTTP PUT and HTTP DELETE operations. Prefix "form" is for form-based POST requests that does "application/x-www-form-url-encoded" encoding automatically. A built-in "login" action is also supported that enables OAuth and Basic Authentication using authorization "Bearer" and "Basic" headers.
+Property **actions** is a list of REST actions to execute in the order defined. The name of the actions are user-defined and must prefix with: *"get" , "post" , "put" , "delete" , or  "form"*. The prefixes *"get", "post", "put", "delete"* map to *HTTP GET, HTTP POST, HTTP PUT and HTTP DELETE* operations respectively. Prefix *"form"* is for form-based *POST* requests that does *"application/x-www-form-url-encoded"* encoding automatically. A built-in *"login"* action is also supported that enables OAuth and Basic Authentication using authorization "Bearer" and "Basic" headers.
 
 **Example:**
 ```properties
