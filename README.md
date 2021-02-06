@@ -2,7 +2,7 @@
 ![CodeQL](https://github.com/psurti/crest4j/workflows/CodeQL/badge.svg)
 <img src="doc/logo/iDino2.png" width="27%"  height="27%" style="float: left" align="left">
 ## iREST4j client
-iREST4j ("*integration* REST") is a java tool that allows execution of a sequence of REST calls to a server. A REST sequence can be Login (OAuth/Basic Auth), GET (call to retrieve a list of items) and POST (call to update an item given parameters from the previous call). iREST4j inter-connects REST calls by passing extracted parameters from a previous call and provide variable subsititions on the following REST calls by sharing context in a sequence. 
+iREST4j ("*interconnect* REST") is a java tool that allows execution of a sequence of REST calls to a server. A REST sequence can be Login (OAuth/Basic Auth), GET (call to retrieve a list of items) and POST (call to update an item given parameters from the previous call). iREST4j inter-connects REST calls by passing extracted parameters from a previous call and provide variable subsititions on the following REST calls by sharing context in a sequence. 
 
 ### Features
 - Ability drive sequence of calls using property or YAML files
