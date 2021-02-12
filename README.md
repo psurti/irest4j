@@ -56,13 +56,13 @@ pretty=true
 Property **ctx** is an application context used for assigning constant values to user-defined variable names. Using format "{{ .. }}",  these variables are substituted on request calls. 
 
 There is also a built-in variable part of the context such as:
-"ctx.seqid ": This is an auto-sequence generated number for unique identifiers during request calls.
+"ctx.seq.id ": This is an auto-sequence generated number for unique identifiers during request calls.
 
 **Example:**
 ```properties
 ctx.foo=bar 
 ctx.page=5
-getBlogPosts.path=/posts/{{ctx.seqid}}
+getBlogPosts.path=/posts/{{ctx.seq.id}}
 ```
 #### Request/Response Level
 For each REST action in the actions list above, these properties are specific to the endpoint:
