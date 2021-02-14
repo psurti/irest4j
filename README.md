@@ -26,6 +26,10 @@ gradlew clean bootJar
 ```
 java -jar irest4j-x.y.jar <path-to-properties-file>
 # eg. java -jar build\libs\irest4j-1.0.jar build\resources\main\blog.properties
+
+## To override logging level 
+#  Change log level in logback.xml 
+#  java -Dlogback.configurationFile=build\resources\main\logback.xml -jar build\libs\irest4j-1.0.jar build\resources\main\blog.properties
 ```
 
 ### Configuration Properties
