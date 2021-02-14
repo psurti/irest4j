@@ -19,7 +19,7 @@ iREST4j ("*interconnect* REST") is a java tool that allows execution of a sequen
 The project uses `gradle` to build. Gradle version: `6.8.1`
 To build the project just run the following command:
 ```shell
-gradlew clean bootJar
+gradlew clean bootJar run --args=src\main\resources\blog.properties
 ```
 
 ### Running the tool

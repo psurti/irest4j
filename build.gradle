@@ -15,17 +15,17 @@ repositories {
 
 dependencies {
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
-    compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
+    implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     // https://mvnrepository.com/artifact/org.springframework/spring-web
-    compile group: 'org.springframework', name: 'spring-web', version: '5.3.3'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
-    compile group: 'commons-codec', name: 'commons-codec', version: '1.15'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     // https://mvnrepository.com/artifact/org.yaml/snakeyaml
-    compile group: 'org.yaml', name: 'snakeyaml', version: '1.27'
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.27'
 
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
