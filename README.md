@@ -12,6 +12,7 @@ iREST4j ("*interconnect* REST") is a java tool that allows execution of a sequen
 
 ### TODOs
 - Support HTTPs
+- Support Branching
 
 ## Getting Started
 
