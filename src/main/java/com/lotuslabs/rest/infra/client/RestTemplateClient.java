@@ -163,24 +163,24 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     public <T> ResponseEntity<T> exchange(RequestEntity<?> requestEntity, Class<T> responseType)  {
-        log.info("\n=================================================");
-        log.info("{}", requestEntity);
+        log.debug("\n=================================================");
+        log.debug("{}", requestEntity);
         final ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, responseType);
-        log.info("\n-------------------------------------------------");
-        log.info("Status:{}",responseEntity.getStatusCode());
-        log.info("Headers:{}",responseEntity.getHeaders());
+        log.debug("\n-------------------------------------------------");
+        log.debug("Status:{}",responseEntity.getStatusCode());
+        log.debug("Headers:{}",responseEntity.getHeaders());
         final String xCsrfTokenVal = responseEntity.getHeaders().getFirst(X_CSRF_TOKEN);
         if (!Objects.equals(this.xCsrfToken, xCsrfTokenVal)) {
             this.xCsrfToken = xCsrfTokenVal;
         }
-        log.info("\n=================================================");
+        log.debug("\n=================================================");
         return responseEntity;
     }
 
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> parseJsonStringToMap(ResponseEntity<String> responseEntity, NamedJsonPathExpression... params) {
-        log.info("{}", (Boolean.TRUE.equals(pretty) && responseEntity.getBody() != null) ?
+        log.debug("{}", (Boolean.TRUE.equals(pretty) && responseEntity.getBody() != null) ?
                 JsonFormatter.prettyPrint(responseEntity.getBody()) :
                 responseEntity.getBody());
         final HttpHeaders headers = responseEntity.getHeaders();
@@ -198,7 +198,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                     }
                     String strVal = String.valueOf(val);
                     if (!param.checkValue(strVal)) {
-                        log.info("Mismatch of actual:{} with expected:{}", strVal, param.getExpectedValue() );
+                        log.warn("#{} Actual:{} Expected:{}", param.getJsonPathLabel(), strVal, param.getExpectedValue() );
                     }
                     ret.put(param.getJsonPathLabel(), strVal);
                 }
