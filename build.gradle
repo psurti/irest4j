@@ -2,12 +2,14 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'application'
+    id 'java'
     //id 'com.github.johnrengelman.shadow' version '6.1.0'
     id "org.springframework.boot" version "2.3.6.RELEASE"
 }
 
 group 'com.lotuslabs.rest'
-version '1.1.0'
+
+version '1.1.1'
 
 repositories {
     mavenCentral()
@@ -41,6 +43,11 @@ test {
     useJUnitPlatform()
 }
 mainClassName = 'com.lotuslabs.rest.IRestApp'
+
+tasks.withType(JavaCompile) {
+    //enable compilation in a separate daemon process
+    options.debug = true
+}
 
 jar {
     manifest {

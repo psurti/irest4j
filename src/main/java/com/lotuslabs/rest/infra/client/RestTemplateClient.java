@@ -5,6 +5,7 @@ import com.jayway.jsonpath.internal.JsonFormatter;
 import com.lotuslabs.rest.interfaces.IConfig;
 import com.lotuslabs.rest.interfaces.IRestClient;
 import com.lotuslabs.rest.model.NamedJsonPathExpression;
+import com.lotuslabs.rest.model.RestContext;
 import com.lotuslabs.rest.model.actions.RestAction;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONValue;
@@ -31,9 +32,7 @@ import java.util.*;
  */
 @Slf4j
 public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
-    private static final String SEQ_ID = "ctx.seq.id";
     private final Boolean pretty;
-    private final Map<String, String> initialContext;
     private String bearer;
     private final String basic;
     private final String consulToken;
@@ -42,13 +41,14 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     public static final String X_CSRF_TOKEN = "X-CSRF-TOKEN";
     public static final String X_CSRF_HEADER = "X-CSRF-HEADER";
     private String xCsrfToken;
+    private final RestContext restContext;
 
     public RestTemplateClient(IConfig config) {
         this.bearer = config.getBearer();
         this.basic = config.getBasicAuth();
         this.consulToken = config.getConsulToken();
-        this.initialContext = config.getContext();
         this.pretty = config.isPretty();
+        this.restContext = new RestContext(config);
         this.restTemplate = new RestTemplate();
         configureMessageConverters();
         configureClientHttpRequestFactory();
@@ -64,8 +64,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     private void configureMessageConverters() {
         final List<HttpMessageConverter<?>> converters = new ArrayList<>(restTemplate.getMessageConverters());
         final FormHttpMessageConverter converter = new FormHttpMessageConverter();
-        MediaType mediaType = new MediaType("application", "x-www-form-urlencoded", StandardCharsets.UTF_8);
-        converter.setSupportedMediaTypes(Collections.singletonList(mediaType));
+        converter.setSupportedMediaTypes(Collections.singletonList( MediaType.APPLICATION_FORM_URLENCODED));
         converters.add(converter);
         restTemplate.setMessageConverters(converters);
     }
@@ -148,12 +147,11 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     public void execute(RestAction... actions) throws IOException {
-        Map<String, Object> context = new LinkedHashMap<>(initialContext);
         for (RestAction action : actions) {
-            context.put(SEQ_ID, System.currentTimeMillis());
-            Map<String, ?> results = action.execute(context,this);
+            restContext.updateSequenceId();
+            Map<String, ?> results = action.execute(restContext,this);
             if (results != null){
-                context.putAll(results);
+                restContext.updateContext(results);
                 Object val  = results.get("bearer");
                 if (val != null) {
                     bearer = val.toString();

@@ -6,6 +6,7 @@ import com.lotuslabs.rest.model.actions.RestAction;
 import java.util.Map;
 
 public interface IConfig {
+    String getHost(String name);
     String getHost();
     String getBearer();
     String getBasicAuth();

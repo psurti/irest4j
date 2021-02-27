@@ -40,6 +40,15 @@ public class PropertiesConfig implements IConfig {
     }
 
     @Override
+    public String getHost(String name) {
+        String val = properties.getProperty( name + ".host");
+        if (val == null) {
+            val = getHost();
+        }
+        return val;
+    }
+
+    @Override
     public String getHost() {
         return properties.getProperty("host");
     }
@@ -89,7 +98,7 @@ public class PropertiesConfig implements IConfig {
             RestAction restAction = null;
             //-- Special handling of Login Action
             if (LoginAction.NAME.equalsIgnoreCase(action)) {
-                restAction = (new LoginAction(this));
+                restAction = (new LoginAction());
             }
 
             if (restAction == null) {
@@ -103,15 +112,15 @@ public class PropertiesConfig implements IConfig {
                 }
                 String method = builder.toString();
                 if (method.equalsIgnoreCase(GetAction.NAME)) {
-                    restAction = new GetAction(action, this);
+                    restAction = new GetAction(action);
                 } else if (method.equalsIgnoreCase(PostAction.NAME)) {
-                    restAction = new PostAction(action, this);
+                    restAction = new PostAction(action);
                 } else if (method.equalsIgnoreCase(PutAction.NAME)) {
-                    restAction = new PutAction(action, this);
+                    restAction = new PutAction(action);
                 } else if (method.equalsIgnoreCase(DeleteAction.NAME)) {
-                    restAction = new DeleteAction(action, this);
+                    restAction = new DeleteAction(action);
                 } else if (method.equalsIgnoreCase(FormPostAction.NAME)) {
-                    restAction = new FormPostAction(action, this);
+                    restAction = new FormPostAction(action);
                 }
             }
             if (restAction != null) {
