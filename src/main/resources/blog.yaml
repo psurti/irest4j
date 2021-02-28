@@ -3,16 +3,22 @@ actions:
   - getAllPosts
   - getPostUser
   - postNewBlogPost
+
+# get a user of a post
 getAllPosts:
   jsonPath:
     userOfPost: $[?(@.title == 'laboriosam dolor voluptates')].userId
     userOfPost.expect: 10
   path: /posts
+
+# Get user details
 getPostUser:
   jsonPath:
     username: $.username
     username.expect: Moriah.Stanton
   path: /users/{{userOfPost}}
+
+# Create a new blog post
 postNewBlogPost:
   body: newBlogPost.json
   jsonPath:
