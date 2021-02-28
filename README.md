@@ -21,6 +21,7 @@ The project uses `gradle` to build. Gradle version: `6.8.1`
 To build the project just run the following command:
 ```shell
 gradlew clean bootJar run --args=src\main\resources\blog.properties
+gradlew clean bootJar run --args=src\main\resources\blog.yaml -Dlogback.configurationFile=build\resources\main\logback.xml
 ```
 
 ### Running the tool

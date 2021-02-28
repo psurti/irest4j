@@ -26,6 +26,8 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static com.lotuslabs.rest.interfaces.AnsiCode.*;
+
 /**
  * @author prsurt
  * @version 9/4/2020 5:04 PM
@@ -196,7 +198,8 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                     }
                     String strVal = String.valueOf(val);
                     if (!param.checkValue(strVal)) {
-                        log.warn("#{} Actual:{} Expected:{}", param.getJsonPathLabel(), strVal, param.getExpectedValue() );
+                        log.warn("#{} Actual:{} Expected:{} {}", param.getJsonPathLabel(), strVal, param.getExpectedValue(),
+                                ANSI_RED + "FAILED" + ANSI_RESET );
                     }
                     ret.put(param.getJsonPathLabel(), strVal);
                 }
@@ -204,7 +207,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         }
         if (!ret.isEmpty()) {
             for(Map.Entry<String,Object> entry: ret.entrySet()) {
-                log.info("#{}={}", entry.getKey(), entry.getValue());
+                log.info("#{}={} {}", entry.getKey(), entry.getValue(), ANSI_GREEN + "OK" + ANSI_RESET);
             }
         } else {
             final Object val = JSONValue.parseKeepingOrder(responseEntity.getBody());
