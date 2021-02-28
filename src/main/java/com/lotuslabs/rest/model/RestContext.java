@@ -59,7 +59,6 @@ public class RestContext {
             encodedPath = applyCustomEncodedQuery(encodedPath);
         }
         String url = substituteVariables(config.getHost(name)) + encodedPath;
-        log.warn("url:" + url);
         return UriComponentsBuilder.fromUriString(url).build(config.isEncodeUrl(name)).toUri();
     }
 

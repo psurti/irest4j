@@ -1,3 +1,4 @@
+host: https://jsonplaceholder.typicode.com
 actions:
   - getAllPosts
   - getPostUser
@@ -5,14 +6,16 @@ actions:
 getAllPosts:
   jsonPath:
     userOfPost: $[?(@.title == 'laboriosam dolor voluptates')].userId
+    userOfPost.expect: 10
   path: /posts
 getPostUser:
   jsonPath:
     username: $.username
+    username.expect: Moriah.Stanton
   path: /users/{{userOfPost}}
-host: https://jsonplaceholder.typicode.com
 postNewBlogPost:
   body: newBlogPost.json
   jsonPath:
     createdId: $.id
+    createdId.expect: 101
   path: /posts
