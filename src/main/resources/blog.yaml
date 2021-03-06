@@ -2,6 +2,7 @@
 
 ctx.host: https://jsonplaceholder.typicode.com
 ctx.foo: bar
+ctx.username: "{{USERNAME}}"
 
 actions:
   - getAllPosts
@@ -15,6 +16,7 @@ getAllPosts:
     userOfPost.expect: 10
   path: /posts
   host: "{{ctx.host}}"
+
 
 # Get user details
 getPostUser:

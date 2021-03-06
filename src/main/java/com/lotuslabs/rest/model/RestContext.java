@@ -14,17 +14,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class RestContext {
-    private static final Pattern templates = Pattern.compile("\\{\\{([A-Za-z0-9.]+)(:*)([A-Za-z0-9.]*)\\}\\}");
+    private static final Pattern templates = Pattern.compile("\\{\\{([A-Za-z0-9._]+)(:*)([A-Za-z0-9.]*)\\}\\}");
 
     private final Map<String, Object> context = new LinkedHashMap<>();
     private final IConfig config;
     private static final String SEQ_ID = "ctx.seq.id";
 
     public RestContext(IConfig config) {
-        context.putAll(config.getContext());
+        final Map<String, String> collect = config.getContext().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, v -> substituteVariables(v.getValue())));
+        context.putAll(collect);
         this.config = config;
     }
 
@@ -37,7 +40,7 @@ public class RestContext {
             final String variableName = matcher.group(1);
             final String separator = matcher.group(2);
             final String value = matcher.group(3);
-            final String defaultValue = (!separator.equals(":")) ? null : value;
+            final String defaultValue = (!separator.equals(":")) ? System.getenv(variableName) : value;
             if (variableName != null) {
                 String variableValue = String.valueOf(context.getOrDefault(variableName, defaultValue));
                 variableCtx.add(new String[]{variableName, separator, value, variableValue});
