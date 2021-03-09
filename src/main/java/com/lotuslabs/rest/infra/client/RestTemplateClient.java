@@ -207,7 +207,10 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         }
         if (!ret.isEmpty()) {
             for(Map.Entry<String,Object> entry: ret.entrySet()) {
-                log.info("#{}={} {}", entry.getKey(), entry.getValue(), ANSI_GREEN + "OK" + ANSI_RESET);
+                final Object entryValue = entry.getValue();
+                log.info("#{}={} {}", entry.getKey(), (Boolean.TRUE.equals(pretty) && entryValue != null) ?
+                        JsonFormatter.prettyPrint(entryValue.toString()) :
+                        entryValue , ANSI_GREEN + "OK" + ANSI_RESET);
             }
         } else {
             final Object val = JSONValue.parseKeepingOrder(responseEntity.getBody());
