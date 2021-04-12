@@ -112,7 +112,11 @@ public class RestContext {
 
     @SuppressWarnings("unchecked")
     public List<Object> getEtag() {
-        return (List<Object>) context.remove(HttpHeaders.ETAG);
+        List<Object> val = (List<Object>) context.remove(HttpHeaders.ETAG);
+        if (val == null) {
+            val = new ArrayList<>(0);
+        }
+        return val;
     }
 
     public void updateSequenceId() {
