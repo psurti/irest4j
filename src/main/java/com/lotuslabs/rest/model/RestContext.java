@@ -119,6 +119,20 @@ public class RestContext {
         return val;
     }
 
+    public String getEtagStrValue() {
+        String eTag = null;
+        final List<Object> valueList = getEtag();
+        if ( !valueList.isEmpty() ) {
+            final Object o = valueList.get(0);
+            if (o != null) {
+                eTag = o.toString();
+                eTag = eTag.substring(1, eTag.length() - 1); //hack
+                log.warn( "etag:{}", eTag);
+            }
+        }
+        return eTag;
+    }
+
     public void updateSequenceId() {
         context.put(SEQ_ID, System.currentTimeMillis());
     }

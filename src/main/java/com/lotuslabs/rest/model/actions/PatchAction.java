@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 @Slf4j
-public class PutAction extends RestAction {
-    public static final String NAME = "put";
+public class PatchAction extends RestAction {
+    public static final String NAME = "patch";
 
-    public PutAction(String name) {
+    public PatchAction(String name) {
         super(name);
     }
 
@@ -18,7 +18,7 @@ public class PutAction extends RestAction {
     public Map<String, ?> execute(RestContext restContext, IRestClient<Map<String, ?>, String> restClient) {
         String eTag = restContext.getEtagStrValue();
         String name = getName();
-        return restClient.put(restContext.getURI(name),
+        return restClient.patch(restContext.getURI(name),
                 restContext.getBodyString(name), eTag,
                 restContext.getNamedJsonPathExpression(name));
     }

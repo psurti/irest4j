@@ -98,6 +98,13 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         }
         return createBodyBuilderRequestEntity(put, body);
     }
+    public RequestEntity<Object> createPatchRequestEntity(URI finalUri, Object body, String eTag) {
+        final RequestEntity.BodyBuilder patch = RequestEntity.patch(finalUri);
+        if (eTag != null) {
+            patch.header(HttpHeaders.IF_MATCH, eTag);
+        }
+        return createBodyBuilderRequestEntity(patch, body);
+    }
 
     public RequestEntity<Object> createPostRequestEntity(URI finalUri, Object body) {
         return createBodyBuilderRequestEntity(RequestEntity.post(finalUri), body);
@@ -246,6 +253,14 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     public Map<String, ?> put(URI finalUri, String body, String eTag, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createPutRequestEntity(finalUri, body, eTag),
+                String.class);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
+    }
+
+    @Override
+    public Map<String, ?> patch(URI finalUri, String body, String eTag, NamedJsonPathExpression... namedJsonPathExpressions) {
+        final ResponseEntity<String> responseEntity = exchange(
+                createPatchRequestEntity(finalUri, body, eTag),
                 String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
