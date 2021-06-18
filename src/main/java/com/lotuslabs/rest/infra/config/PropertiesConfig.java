@@ -121,6 +121,8 @@ public class PropertiesConfig implements IConfig {
                     restAction = new DeleteAction(action);
                 } else if (method.equalsIgnoreCase(FormPostAction.NAME)) {
                     restAction = new FormPostAction(action);
+                } else if (method.equalsIgnoreCase(PatchAction.NAME)) {
+                    restAction = new PatchAction(action);
                 }
             }
             if (restAction != null) {
