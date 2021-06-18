@@ -10,11 +10,13 @@ import com.lotuslabs.rest.model.actions.RestAction;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONValue;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -57,8 +59,9 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     private void configureClientHttpRequestFactory() {
-        final  OkHttp3ClientHttpRequestFactory clientHttpRequestFactory = new OkHttp3ClientHttpRequestFactory();
         //final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
         clientHttpRequestFactory.setConnectTimeout(10_000);
         clientHttpRequestFactory.setReadTimeout(30_000);
         restTemplate.setRequestFactory(clientHttpRequestFactory);
