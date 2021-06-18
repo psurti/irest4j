@@ -14,7 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
@@ -57,7 +57,8 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     private void configureClientHttpRequestFactory() {
-        final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+        final  OkHttp3ClientHttpRequestFactory clientHttpRequestFactory = new OkHttp3ClientHttpRequestFactory();
+        //final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
         clientHttpRequestFactory.setConnectTimeout(10_000);
         clientHttpRequestFactory.setReadTimeout(30_000);
         restTemplate.setRequestFactory(clientHttpRequestFactory);
