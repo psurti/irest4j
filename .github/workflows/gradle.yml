@@ -24,3 +24,9 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew bootJar
+    - name: Upload to release
+      uses: psurti/upload-to-release@master
+      with:
+        args: irest*.jar
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
