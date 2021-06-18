@@ -103,11 +103,10 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         return createBodyBuilderRequestEntity(put, body);
     }
     public RequestEntity<Object> createPatchRequestEntity(URI finalUri, Object body, String eTag) {
-        final RequestEntity.BodyBuilder patch = RequestEntity.post(finalUri);
+        final RequestEntity.BodyBuilder patch = RequestEntity.patch(finalUri);
         if (eTag != null) {
             patch.header(HttpHeaders.IF_MATCH, eTag);
         }
-        patch.header("X-HTTP-Method-Override", "PATCH");
         return createBodyBuilderRequestEntity(patch, body);
     }
 
