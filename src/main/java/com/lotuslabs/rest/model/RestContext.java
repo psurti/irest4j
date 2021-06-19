@@ -114,7 +114,11 @@ public class RestContext {
     public List<Object> getEtag() {
         List<Object> val = (List<Object>) context.remove(HttpHeaders.ETAG);
         if (val == null) {
-            val = new ArrayList<>(0);
+            //non-convention - Etag
+            val = (List<Object>) context.remove("Etag");
+            if (val == null) {
+                val = new ArrayList<>(0);
+            }
         }
         return val;
     }
