@@ -130,7 +130,7 @@ public class RestContext {
             final Object o = valueList.get(0);
             if (o != null) {
                 eTag = o.toString();
-                eTag = eTag.substring(1, eTag.length() - 1); //hack
+                //eTag = eTag.substring(1, eTag.length() - 1); //hack
                 log.warn( "etag:{}", eTag);
             }
         }
