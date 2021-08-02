@@ -6,17 +6,19 @@ import com.lotuslabs.rest.infra.client.RestTemplateClient;
 import com.lotuslabs.rest.infra.config.ConfigFactory;
 import com.lotuslabs.rest.infra.config.PropertiesConfig;
 import com.lotuslabs.rest.interfaces.IConfig;
+import com.lotuslabs.rest.interfaces.Result;
 import com.lotuslabs.rest.model.actions.RestAction;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientResponseException;
 
-import java.io.IOException;
+import java.util.Collection;
 
 @Slf4j
 public class IRestApp {
     private final RestTemplateClient client;
     private final RestAction[] actions;
+    private final Result result;
     static {
         LoggerContext loggerFactory = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerFactory.getLogger("com.jayway.jsonpath").setLevel(Level.INFO);
@@ -24,23 +26,27 @@ public class IRestApp {
 
     public IRestApp(IConfig config ) {
         //-- Client
-        client = new RestTemplateClient(config);
+        result = new Result();
+        client = new RestTemplateClient(config, result);
         actions = config.getActions();
     }
 
-    void executeAll() throws IOException {
-        client.execute(actions);
+    void executeAll() throws Exception {
+        client.execute(result, actions);
     }
 
-    static void run(String[] args) throws IOException {
+    static void run(String[] args) throws Exception {
         if (args == null || args.length == 0) {
             log.warn("Usage: RestApp <property file>");
             System.exit(0);
         }
         String propertyFile = args[0];
-        PropertiesConfig config = ConfigFactory.create(propertyFile);
-        IRestApp app = new IRestApp(config);
-        app.executeAll();
+        Collection<PropertiesConfig> configs = ConfigFactory.createAll(propertyFile);
+
+        for (PropertiesConfig config : configs) {
+            IRestApp app = new IRestApp(config);
+            app.executeAll();
+        }
     }
 
     public static void main(String[] args) {
@@ -48,8 +54,8 @@ public class IRestApp {
             IRestApp.run(args);
         } catch (RestClientResponseException e ) {
             log.error(e.getResponseBodyAsString(), e);
-        } catch (IOException e) {
-            log.error(e.getLocalizedMessage() , e );
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage() , e);
         }
     }
 }

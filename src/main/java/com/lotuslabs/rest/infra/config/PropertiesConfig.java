@@ -1,12 +1,13 @@
 package com.lotuslabs.rest.infra.config;
 
 import com.lotuslabs.rest.interfaces.IConfig;
+import com.lotuslabs.rest.interfaces.OutputListener;
+import com.lotuslabs.rest.interfaces.Result;
 import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.actions.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PropertiesConfig implements IConfig {
     private final Properties properties;
+    private final String propertyPath;
 
     static PropertiesConfig create(String propertyFile) throws IOException {
         Properties p = new Properties();
@@ -37,6 +39,7 @@ public class PropertiesConfig implements IConfig {
 
         log.info("settings:{}", properties);
         this.properties = properties;
+        this.propertyPath = propertyPath;
     }
 
     @Override
@@ -47,6 +50,8 @@ public class PropertiesConfig implements IConfig {
         }
         return val;
     }
+
+    public String getName() { return this.propertyPath; }
 
     @Override
     public String getHost() {
@@ -66,6 +71,22 @@ public class PropertiesConfig implements IConfig {
     @Override
     public boolean isPretty() {
         return Boolean.parseBoolean(properties.getProperty("pretty", "false"));
+    }
+
+    @Override
+    public OutputListener getResultListener(Result result){
+        String results = properties.getProperty("results", null);
+        if (results != null) {
+            OutputStream oos;
+            try {
+                oos = new BufferedOutputStream(new FileOutputStream(results));
+                return new JUnitXmlListener(result, oos);
+            } catch (FileNotFoundException e) {
+                log.error(e.getLocalizedMessage(), e);
+            }
+
+        }
+        return null;
     }
 
     private String[] getActionValues() {

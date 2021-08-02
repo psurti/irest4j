@@ -2,8 +2,7 @@ package com.lotuslabs.rest.infra.client;
 
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.JsonFormatter;
-import com.lotuslabs.rest.interfaces.IConfig;
-import com.lotuslabs.rest.interfaces.IRestClient;
+import com.lotuslabs.rest.interfaces.*;
 import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.RestContext;
 import com.lotuslabs.rest.model.actions.RestAction;
@@ -23,7 +22,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -37,6 +35,7 @@ import static com.lotuslabs.rest.interfaces.AnsiCode.*;
 @Slf4j
 public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     private final Boolean pretty;
+    private final String name;
     private String bearer;
     private final String basic;
     private final String consulToken;
@@ -46,8 +45,9 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     public static final String X_CSRF_HEADER = "X-CSRF-HEADER";
     private String xCsrfToken;
     private final RestContext restContext;
+    private final OutputListener outputListener;
 
-    public RestTemplateClient(IConfig config) {
+    public RestTemplateClient(IConfig config, Result result) {
         this.bearer = config.getBearer();
         this.basic = config.getBasicAuth();
         this.consulToken = config.getConsulToken();
@@ -56,6 +56,9 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         this.restTemplate = new RestTemplate();
         configureMessageConverters();
         configureClientHttpRequestFactory();
+        this.outputListener = config.getResultListener(result);
+        this.name = config.getName();
+
     }
 
     private void configureClientHttpRequestFactory() {
@@ -159,16 +162,44 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         return params;
     }
 
-    public void execute(RestAction... actions) throws IOException {
-        for (RestAction action : actions) {
-            restContext.updateSequenceId();
-            Map<String, ?> results = action.execute(restContext,this);
-            if (results != null){
-                restContext.updateContext(results);
-                Object val  = results.get("bearer");
-                if (val != null) {
-                    bearer = val.toString();
+    public void execute(Result result, RestAction... actions) throws Exception {
+        Description description = new Description(name);
+        if (outputListener != null) {
+            outputListener.testRunStarted(description);
+        }
+        try {
+            for (RestAction action : actions) {
+                restContext.updateSequenceId();
+                Description descr = new Description(action.getName());
+                if (outputListener != null) {
+                    outputListener.testStarted(descr);
                 }
+                Map<String, ?> results;
+                try {
+                    results = action.execute(restContext, this);
+                } catch (RuntimeException e) {
+                    if (outputListener != null) {
+                        outputListener.testFailure(new Failure(descr, e));
+                    }
+                    throw e;
+                } finally {
+                    if (outputListener != null) {
+                        outputListener.testFinished(descr);
+                    }
+                }
+                if (results != null) {
+                    restContext.updateContext(results);
+                    Object val = results.get("bearer");
+                    if (val != null) {
+                        bearer = val.toString();
+                    }
+                }
+
+
+            }
+        } finally {
+            if (outputListener != null) {
+                outputListener.testRunFinished(result);
             }
         }
     }

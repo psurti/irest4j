@@ -12,6 +12,7 @@ public interface IConfig {
     String getBasicAuth();
     String getConsulToken();
     boolean isPretty();
+    OutputListener getResultListener(Result result);
     Map<String,String> getContext();
     RestAction[] getActions();
     String getPath(String name);
@@ -19,4 +20,5 @@ public interface IConfig {
     boolean isEncodePath(String name);
     String getBody(String name);
     Map<String, NamedJsonPathExpression> getJsonExps(String name);
+    String getName();
 }
