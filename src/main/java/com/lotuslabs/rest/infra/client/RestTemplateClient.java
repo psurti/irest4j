@@ -260,7 +260,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                 ret.put(".", val);
             } else if (val instanceof Map ) {
                 ret.putAll((Map<? extends String, ?>) val);
-            } else {
+            } else if (val != null) {
                 throw new IllegalArgumentException("unsupported type " +  val);
             }
         }
