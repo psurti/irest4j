@@ -65,8 +65,8 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         //final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
-        clientHttpRequestFactory.setConnectTimeout(10_000);
-        clientHttpRequestFactory.setReadTimeout(30_000);
+        clientHttpRequestFactory.setConnectTimeout(0);
+        clientHttpRequestFactory.setReadTimeout(0);
         restTemplate.setRequestFactory(clientHttpRequestFactory);
     }
 
