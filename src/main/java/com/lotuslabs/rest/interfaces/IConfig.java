@@ -21,4 +21,5 @@ public interface IConfig {
     String getBody(String name);
     Map<String, NamedJsonPathExpression> getJsonExps(String name);
     String getName();
+    boolean ignoreFailure(String name);
 }

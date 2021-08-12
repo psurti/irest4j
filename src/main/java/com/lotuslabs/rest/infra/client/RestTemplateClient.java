@@ -174,14 +174,18 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                 if (outputListener != null) {
                     outputListener.testStarted(descr);
                 }
-                Map<String, ?> results;
+                Map<String, ?> results = null;
                 try {
                     results = action.execute(restContext, this);
                 } catch (RuntimeException e) {
                     if (outputListener != null) {
                         outputListener.testFailure(new Failure(descr, e));
                     }
-                    throw e;
+                    if (!restContext.ignoreFailure(action.getName())) {
+                        throw e;
+                    } else {
+                        log.warn("Test `Failed` but ignored (ignoreFailure=true) {}", action.getName());
+                    }
                 } finally {
                     if (outputListener != null) {
                         outputListener.testFinished(descr);

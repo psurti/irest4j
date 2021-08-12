@@ -65,6 +65,9 @@ public class RestContext {
         return UriComponentsBuilder.fromUriString(url).build(config.isEncodeUrl(name)).toUri();
     }
 
+    public boolean ignoreFailure(String name) {
+        return this.config.ignoreFailure(name);
+    }
     /*
   TODO: This custom logic is for a specific case so move it out in the future
    */

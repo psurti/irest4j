@@ -187,6 +187,11 @@ public class PropertiesConfig implements IConfig {
     }
 
     @Override
+    public boolean ignoreFailure(String name) {
+        return Boolean.parseBoolean(properties.getProperty( name + ".ignoreFailure", Boolean.FALSE.toString()));
+    }
+
+    @Override
     public Map<String, NamedJsonPathExpression> getJsonExps(String name) {
         Map<String, NamedJsonPathExpression> ret = new LinkedHashMap<>();
         properties.forEach( (k, v) -> {
