@@ -36,7 +36,7 @@ public class NamedJsonPathExpression {
     }
 
     public boolean checkValue(String actualValue) {
-        if (expectedValue.startsWith(REGEX)) {
+        if (expectedValue != null && expectedValue.startsWith(REGEX)) {
             return actualValue != null && actualValue.matches(this.expectedValue.substring(REGEX.length()));
         }
         return actualValue != null && actualValue.equals(this.expectedValue);
