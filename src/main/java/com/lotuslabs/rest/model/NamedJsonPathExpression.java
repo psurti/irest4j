@@ -1,6 +1,7 @@
 package com.lotuslabs.rest.model;
 
 public class NamedJsonPathExpression {
+    public static final String REGEX = "regex:";
     private String jsonPath;
     private String jsonPathLabel;
     private String expectedValue;
@@ -35,6 +36,9 @@ public class NamedJsonPathExpression {
     }
 
     public boolean checkValue(String actualValue) {
+        if (expectedValue.startsWith(REGEX)) {
+            return actualValue != null && actualValue.matches(this.expectedValue.substring(REGEX.length()));
+        }
         return actualValue != null && actualValue.equals(this.expectedValue);
     }
 
