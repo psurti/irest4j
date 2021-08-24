@@ -29,6 +29,8 @@ public class RestContext {
     }
 
     private String substituteVariables(String data) {
+        if (data == null )
+            return null;
         AtomicReference<String> substitutedData = new AtomicReference<>(data);
         //-- substitute template variables
         final Matcher matcher = templates.matcher(substitutedData.get());
