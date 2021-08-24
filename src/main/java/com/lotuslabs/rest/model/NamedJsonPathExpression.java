@@ -5,6 +5,8 @@ public class NamedJsonPathExpression {
     private String jsonPath;
     private String jsonPathLabel;
     private String expectedValue;
+    private boolean isRegexExpectedValue;
+    private String resolvedExpectedValue;
 
     public NamedJsonPathExpression() {}
 
@@ -32,17 +34,42 @@ public class NamedJsonPathExpression {
 
     public NamedJsonPathExpression setExpectedValue(String expectedValue) {
         this.expectedValue = expectedValue;
+        this.resolvedExpectedValue = expectedValue;
+        if (isRegex(expectedValue)) {
+            this.isRegexExpectedValue = true;
+            this.expectedValue = extractExpectedValue(expectedValue);
+            this.resolvedExpectedValue = this.expectedValue;
+        }
         return this;
     }
 
     public boolean checkValue(String actualValue) {
-        if (expectedValue != null && expectedValue.startsWith(REGEX)) {
-            return actualValue != null && actualValue.matches(this.expectedValue.substring(REGEX.length()));
+        if (isRegexExpectedValue) {
+            return actualValue != null && actualValue.matches(this.resolvedExpectedValue);
         }
         return actualValue != null && actualValue.equals(this.expectedValue);
     }
 
+    public String getResolvedExpectedValue() {
+        return this.resolvedExpectedValue;
+    }
+
+    public void setResolvedExpectedValue(String value) {
+        this.resolvedExpectedValue = value;
+    }
+
     public String getExpectedValue() {
         return this.expectedValue;
+    }
+
+    private boolean isRegex(String value) {
+        return value != null && value.startsWith(REGEX);
+    }
+
+    private String extractExpectedValue(String value) {
+        if (isRegex(value)) {
+            return value.substring(REGEX.length());
+        }
+        return value;
     }
 }

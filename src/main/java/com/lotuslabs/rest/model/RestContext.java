@@ -6,10 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -106,7 +103,9 @@ public class RestContext {
     }
 
     public NamedJsonPathExpression[] getNamedJsonPathExpression(String name) {
-        return config.getJsonExps(name).values().toArray(new NamedJsonPathExpression[0]);
+        Collection<NamedJsonPathExpression> ret = config.getJsonExps(name).values();
+        ret.forEach( n -> n.setResolvedExpectedValue(substituteVariables(n.getResolvedExpectedValue())));
+        return  ret.toArray(new NamedJsonPathExpression[0]);
     }
 
     public void updateContext(Map<String, ?> ctx) {
