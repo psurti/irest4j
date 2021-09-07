@@ -127,6 +127,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     private RequestEntity<Object> createBodyBuilderRequestEntity(RequestEntity.BodyBuilder builder, Object body) {
+        log.debug("Body length = " +  body);
         String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
         return builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CSRF_HEADER, X_CSRF_TOKEN)
