@@ -25,7 +25,7 @@ public class RestContext {
         final Map<String, String> collect = config.getContext().entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, v -> substituteVariables(v.getValue())));
         context.putAll(collect);
-        log.debug(collect,);
+        log.debug("configuration:" + new TreeMap<>(collect));
         this.config = config;
     }
 
