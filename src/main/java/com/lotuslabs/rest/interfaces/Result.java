@@ -31,7 +31,9 @@ public class Result implements Serializable {
     private final AtomicLong runTime;
     private final AtomicLong startTime;
 
-    /** Only set during deserialization process. */
+    /**
+     * Only set during deserialization process.
+     */
     private SerializedForm serializedForm;
 
     public Result() {
@@ -118,7 +120,7 @@ public class Result implements Serializable {
         serializedForm = SerializedForm.deserialize(s);
     }
 
-    private Object readResolve()  {
+    private Object readResolve() {
         return new Result(serializedForm);
     }
 
@@ -140,7 +142,7 @@ public class Result implements Serializable {
         }
 
         @Override
-        public void testFinished(Description description)  {
+        public void testFinished(Description description) {
             count.getAndIncrement();
         }
 

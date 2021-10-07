@@ -18,6 +18,6 @@ public class LoginAction extends RestAction {
         String name = getName();
         return restClient.formPost(restContext.getURI(name),
                 restContext.getBodyString(name),
-                restContext.getAccessTokenJsonPathExpression() );
+                restContext.getAccessTokenJsonPathExpression());
     }
 }

@@ -33,7 +33,7 @@ import static com.lotuslabs.rest.interfaces.AnsiCode.*;
  * @version 9/4/2020 5:04 PM
  */
 @Slf4j
-public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
+public class RestTemplateClient implements IRestClient<Map<String, ?>, String> {
     private final Boolean pretty;
     private final String name;
     private String bearer;
@@ -73,7 +73,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     private void configureMessageConverters() {
         final List<HttpMessageConverter<?>> converters = new ArrayList<>(restTemplate.getMessageConverters());
         final FormHttpMessageConverter converter = new FormHttpMessageConverter();
-        converter.setSupportedMediaTypes(Collections.singletonList( MediaType.APPLICATION_FORM_URLENCODED));
+        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_FORM_URLENCODED));
         converters.add(converter);
         restTemplate.setMessageConverters(converters);
     }
@@ -105,6 +105,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         }
         return createBodyBuilderRequestEntity(put, body);
     }
+
     public RequestEntity<Object> createPatchRequestEntity(URI finalUri, Object body, String eTag) {
         final RequestEntity.BodyBuilder patch = RequestEntity.patch(finalUri);
         if (eTag != null) {
@@ -127,7 +128,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     private RequestEntity<Object> createBodyBuilderRequestEntity(RequestEntity.BodyBuilder builder, Object body) {
-        log.debug("Body length = " +  body);
+        log.debug("Body length = " + body);
         String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
         return builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CSRF_HEADER, X_CSRF_TOKEN)
@@ -177,6 +178,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                 }
                 Map<String, ?> results = null;
                 try {
+                    log.info( "Action:" + action.getName() + " " + restContext.getURI(action.getName()));
                     results = action.execute(restContext, this);
                 } catch (RuntimeException e) {
                     if (outputListener != null) {
@@ -209,13 +211,13 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
         }
     }
 
-    public <T> ResponseEntity<T> exchange(RequestEntity<?> requestEntity, Class<T> responseType)  {
+    public <T> ResponseEntity<T> exchange(RequestEntity<?> requestEntity, Class<T> responseType) {
         log.debug("\n=================================================");
         log.debug("{}", requestEntity);
         final ResponseEntity<T> responseEntity = restTemplate.exchange(requestEntity, responseType);
         log.debug("\n-------------------------------------------------");
-        log.debug("Status:{}",responseEntity.getStatusCode());
-        log.debug("Headers:{}",responseEntity.getHeaders());
+        log.debug("Status:{}", responseEntity.getStatusCode());
+        log.debug("Headers:{}", responseEntity.getHeaders());
         final String xCsrfTokenVal = responseEntity.getHeaders().getFirst(X_CSRF_TOKEN);
         if (!Objects.equals(this.xCsrfToken, xCsrfTokenVal)) {
             this.xCsrfToken = xCsrfTokenVal;
@@ -239,34 +241,34 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
                 if (val != null) {
                     if (param.getJsonPathLabel() != null
                             && val instanceof List
-                            &&  ((List<?>) val).size()==1) {
+                            && ((List<?>) val).size() == 1) {
                         //Flatten array of 1
                         val = ((List<?>) val).get(0);
                     }
                     String strVal = String.valueOf(val);
                     if (!param.checkValue(strVal)) {
                         log.warn("#{} Actual:{} Expected:{} {}", param.getJsonPathLabel(), strVal, param.getExpectedValue(),
-                                ANSI_RED + "FAILED" + ANSI_RESET );
+                                ANSI_RED + "FAILED" + ANSI_RESET);
                     }
                     ret.put(param.getJsonPathLabel(), strVal);
                 }
             }
         }
         if (!ret.isEmpty()) {
-            for(Map.Entry<String,Object> entry: ret.entrySet()) {
+            for (Map.Entry<String, Object> entry : ret.entrySet()) {
                 final Object entryValue = entry.getValue();
                 log.info("#{}={} {}", entry.getKey(), (Boolean.TRUE.equals(pretty) && entryValue != null) ?
                         JsonFormatter.prettyPrint(entryValue.toString()) :
-                        entryValue , ANSI_GREEN + "OK" + ANSI_RESET);
+                        entryValue, ANSI_GREEN + "OK" + ANSI_RESET);
             }
         } else {
             final Object val = JSONValue.parseKeepingOrder(responseEntity.getBody());
             if (val instanceof List) {
                 ret.put(".", val);
-            } else if (val instanceof Map ) {
+            } else if (val instanceof Map) {
                 ret.putAll((Map<? extends String, ?>) val);
             } else if (val != null) {
-                throw new IllegalArgumentException("unsupported type " +  val);
+                throw new IllegalArgumentException("unsupported type " + val);
             }
         }
         ret.putAll(headers);
@@ -286,7 +288,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     public Map<String, ?> formPost(URI finalUri, String body, NamedJsonPathExpression... namedJsonPathExpressions) {
         final RequestEntity<?> formPostRequestEntity = createFormPostRequestEntity(finalUri, body);
         final ResponseEntity<String> responseEntity = exchange(formPostRequestEntity, String.class);
-        return parseJsonStringToMap( responseEntity, namedJsonPathExpressions);
+        return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
@@ -306,7 +308,7 @@ public class RestTemplateClient implements IRestClient<Map<String,?>, String> {
     }
 
     @Override
-    public  Map<String, ?> get(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> get(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
                 createGetRequestEntity(finalUri).build(),
                 String.class);

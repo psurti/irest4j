@@ -16,6 +16,8 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.springframework/spring-expression
+    implementation group: 'org.springframework', name: 'spring-expression', version: '5.3.3'
     // https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path
     implementation group: 'com.jayway.jsonpath', name: 'json-path', version: '2.5.0'
     // https://mvnrepository.com/artifact/org.springframework/spring-web
@@ -54,7 +56,7 @@ tasks.withType(JavaCompile) {
 
 jar {
     manifest {
-       attributes 'Main-Class': 'com.lotuslabs.rest.IRestApp'
+        attributes 'Main-Class': 'com.lotuslabs.rest.IRestApp'
     }
 }
 

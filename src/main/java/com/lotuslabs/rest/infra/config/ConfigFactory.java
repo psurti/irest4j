@@ -13,7 +13,8 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Objects;
 
 public class ConfigFactory {
-    private ConfigFactory(){}
+    private ConfigFactory() {
+    }
 
 
     public static Collection<PropertiesConfig> createAll(String configDir) throws IOException {
@@ -40,7 +41,7 @@ public class ConfigFactory {
         if (configFile.endsWith(".yaml")) {
             ret = createYamlProperties(configFile);
         } else if (configFile.endsWith(".properties")) {
-            ret =  PropertiesConfig.create(configFile);
+            ret = PropertiesConfig.create(configFile);
         } else {
             if (throwException) {
                 throw new InvalidPropertiesFormatException("Unsupported file");

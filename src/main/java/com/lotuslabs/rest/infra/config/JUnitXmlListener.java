@@ -111,7 +111,7 @@ public class JUnitXmlListener implements OutputListener {
         final String TESTSUITE = "testsuite";
         rootElement = document.createElement(TESTSUITE);
         String n = description.getDisplayName();
-        rootElement.setAttribute(ATTR_NAME, n == null ? "unknown": n);
+        rootElement.setAttribute(ATTR_NAME, n == null ? "unknown" : n);
         final String TIMESTAMP = "timestamp";
 
         rootElement.setAttribute(TIMESTAMP, DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()));
@@ -153,7 +153,7 @@ public class JUnitXmlListener implements OutputListener {
     private void formatError(Failure f) {
         testFinished(f.getDescription());
         failedTests.put(f.getDescription(), f);
-        
+
         Element nested = document.createElement(JUnitXmlListener.FAILURE);
         Element currentTest = testElements.get(f.getDescription());
 

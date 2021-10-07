@@ -30,7 +30,7 @@ public class RestContext {
     }
 
     private String substituteVariables(String data) {
-        if (data == null )
+        if (data == null)
             return null;
         AtomicReference<String> substitutedData = new AtomicReference<>(data);
         //-- substitute template variables
@@ -68,6 +68,7 @@ public class RestContext {
     public boolean ignoreFailure(String name) {
         return this.config.ignoreFailure(name);
     }
+
     /*
   TODO: This custom logic is for a specific case so move it out in the future
    */
@@ -102,13 +103,13 @@ public class RestContext {
     }
 
     public NamedJsonPathExpression[] getAccessTokenJsonPathExpression() {
-        return new NamedJsonPathExpression[] {NamedJsonPathExpression.valueOf("bearer", "$.access_token")};
+        return new NamedJsonPathExpression[]{NamedJsonPathExpression.valueOf("bearer", "$.access_token")};
     }
 
     public NamedJsonPathExpression[] getNamedJsonPathExpression(String name) {
         Collection<NamedJsonPathExpression> ret = config.getJsonExps(name).values();
-        ret.forEach( n -> n.setResolvedExpectedValue(substituteVariables(n.getResolvedExpectedValue())));
-        return  ret.toArray(new NamedJsonPathExpression[0]);
+        ret.forEach(n -> n.setResolvedExpectedValue(substituteVariables(n.getResolvedExpectedValue())));
+        return ret.toArray(new NamedJsonPathExpression[0]);
     }
 
     public void updateContext(Map<String, ?> ctx) {
@@ -131,12 +132,12 @@ public class RestContext {
     public String getEtagStrValue() {
         String eTag = null;
         final List<Object> valueList = getEtag();
-        if ( !valueList.isEmpty() ) {
+        if (!valueList.isEmpty()) {
             final Object o = valueList.get(0);
             if (o != null) {
                 eTag = o.toString();
                 //eTag = eTag.substring(1, eTag.length() - 1); //hack
-                log.warn( "etag:{}", eTag);
+                log.warn("etag:{}", eTag);
             }
         }
         return eTag;
@@ -149,8 +150,10 @@ public class RestContext {
     private interface QueryVisitor<T> {
         T visit(FreeTextQuery query);
     }
+
     private static class FreeTextQuery implements Function<QueryVisitor<String>, String> {
         private final String text;
+
         public FreeTextQuery(String text) {
             this.text = text;
         }
@@ -184,14 +187,13 @@ public class RestContext {
                 data = URIQueryGenerator.URLParamEncoder.encode(data);
             }
             builder.append(data);
-            builder.append( "&");
+            builder.append("&");
             return builder.toString(); //I18NOK:LSM
         }
 
-        private String replaceQueryText(FreeTextQuery query)
-        {
+        private String replaceQueryText(FreeTextQuery query) {
             String ret = query.getText();
-            ret = (ret == null || ret.isEmpty() ) ? "*:*" : ret;//can this be in the query
+            ret = (ret == null || ret.isEmpty()) ? "*:*" : ret;//can this be in the query
             return ret;
         }
 
@@ -222,7 +224,8 @@ public class RestContext {
                 return " %$&+,/:;=?@<>#%\"{}\\".indexOf(ch) >= 0;
             }
 
-            private URLParamEncoder() {}
+            private URLParamEncoder() {
+            }
         }
     }
 }

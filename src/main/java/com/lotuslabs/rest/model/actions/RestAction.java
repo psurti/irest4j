@@ -15,10 +15,10 @@ public abstract class RestAction {
     public RestAction(String name) {
         super();
         this.name = name;
-   }
+    }
 
-    public abstract Map<String,?> execute(RestContext restContext,
-                                          IRestClient<Map<String,?>, String> restClient) throws IOException;
+    public abstract Map<String, ?> execute(RestContext restContext,
+                                           IRestClient<Map<String, ?>, String> restClient) throws IOException;
 
     public String getName() {
         return this.name;

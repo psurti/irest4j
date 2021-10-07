@@ -19,12 +19,13 @@ public class IRestApp {
     private final RestTemplateClient client;
     private final RestAction[] actions;
     private final Result result;
+
     static {
         LoggerContext loggerFactory = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerFactory.getLogger("com.jayway.jsonpath").setLevel(Level.INFO);
     }
 
-    public IRestApp(IConfig config ) {
+    public IRestApp(IConfig config) {
         //-- Client
         result = new Result();
         client = new RestTemplateClient(config, result);
@@ -52,10 +53,10 @@ public class IRestApp {
     public static void main(String[] args) {
         try {
             IRestApp.run(args);
-        } catch (RestClientResponseException e ) {
+        } catch (RestClientResponseException e) {
             log.error(e.getResponseBodyAsString(), e);
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage() , e);
+            log.error(e.getLocalizedMessage(), e);
         }
     }
 }

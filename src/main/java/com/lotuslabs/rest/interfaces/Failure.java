@@ -6,6 +6,7 @@ import java.io.StringWriter;
 public class Failure {
     final Description description;
     final Throwable throwable;
+
     public Failure(Description description, Throwable throwable) {
         this.description = description;
         this.throwable = throwable;

@@ -8,12 +8,13 @@ public class NamedJsonPathExpression {
     private boolean isRegexExpectedValue;
     private String resolvedExpectedValue;
 
-    public NamedJsonPathExpression() {}
+    public NamedJsonPathExpression() {
+    }
 
     public static NamedJsonPathExpression valueOf(String jsonPathLabel, String jsonPath) {
         return new NamedJsonPathExpression().setJsonPath(jsonPath).setJsonPathLabel(jsonPathLabel);
     }
-    
+
     public NamedJsonPathExpression setJsonPath(String jsonPath) {
         this.jsonPath = jsonPath;
         return this;

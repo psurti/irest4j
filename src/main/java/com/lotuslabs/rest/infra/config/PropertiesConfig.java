@@ -21,7 +21,7 @@ public class PropertiesConfig implements IConfig {
 
     static PropertiesConfig create(String propertyFile) throws IOException {
         Properties p = new Properties();
-        try(FileReader fr = new FileReader(propertyFile)) {
+        try (FileReader fr = new FileReader(propertyFile)) {
             p.load(fr);
         }
         final Path parent = Paths.get(propertyFile).getParent();
@@ -44,14 +44,16 @@ public class PropertiesConfig implements IConfig {
 
     @Override
     public String getHost(String name) {
-        String val = properties.getProperty( name + ".host");
+        String val = properties.getProperty(name + ".host");
         if (val == null) {
             val = getHost();
         }
         return val;
     }
 
-    public String getName() { return this.propertyPath; }
+    public String getName() {
+        return this.propertyPath;
+    }
 
     @Override
     public String getHost() {
@@ -74,7 +76,7 @@ public class PropertiesConfig implements IConfig {
     }
 
     @Override
-    public OutputListener getResultListener(Result result){
+    public OutputListener getResultListener(Result result) {
         String results = properties.getProperty("results", null);
         if (results != null) {
             OutputStream oos;
@@ -173,7 +175,8 @@ public class PropertiesConfig implements IConfig {
     @Override
     public String getBody(String name) {
         return getBodyData(properties.getProperty(name + ".body"),
-                properties.getProperty("propertyPath", "."));    }
+                properties.getProperty("propertyPath", "."));
+    }
 
     private String getBodyData(String body, String propertiesPath) {
         if (body != null && body.endsWith(".json")) {
@@ -188,17 +191,17 @@ public class PropertiesConfig implements IConfig {
 
     @Override
     public boolean ignoreFailure(String name) {
-        return Boolean.parseBoolean(properties.getProperty( name + ".ignoreFailure", Boolean.FALSE.toString()));
+        return Boolean.parseBoolean(properties.getProperty(name + ".ignoreFailure", Boolean.FALSE.toString()));
     }
 
     @Override
     public Map<String, NamedJsonPathExpression> getJsonExps(String name) {
         Map<String, NamedJsonPathExpression> ret = new LinkedHashMap<>();
-        properties.forEach( (k, v) -> {
+        properties.forEach((k, v) -> {
             final String key = k.toString();
             final int index = key.indexOf(name + ".jsonPath.");
             if (index >= 0) {
-                String id = (key.endsWith(".expect")) ? key.substring(0, key.length()-7) : key;
+                String id = (key.endsWith(".expect")) ? key.substring(0, key.length() - 7) : key;
                 NamedJsonPathExpression expression = ret.get(id);
                 if (expression == null) {
                     expression = new NamedJsonPathExpression();
@@ -221,7 +224,7 @@ public class PropertiesConfig implements IConfig {
         return properties.getProperty("consulToken", System.getenv("CONSUL_TOKEN"));
     }
 
-    public Map<String,String> getContext() {
+    public Map<String, String> getContext() {
         return properties.entrySet().stream()
                 .filter(e -> e.getKey().toString().startsWith("ctx."))
                 .collect(Collectors.toMap(k -> k.getKey().toString(),
