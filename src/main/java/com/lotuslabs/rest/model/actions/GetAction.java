@@ -17,6 +17,7 @@ public class GetAction extends RestAction {
                                   IRestClient<Map<String, ?>, String> restClient) {
         String name = getName();
         return restClient.get(restContext.getURI(name),
+                restContext.getHeaders(name),
                 restContext.getNamedJsonPathExpression(name));
     }
 }

@@ -21,6 +21,7 @@ class FormPostAction extends RestAction {
         String name = getName();
         return restClient.formPost(restContext.getURI(name),
                 restContext.getBodyString(name),
+                restContext.getHeaders(name),
                 restContext.getNamedJsonPathExpression(name));
     }
 }

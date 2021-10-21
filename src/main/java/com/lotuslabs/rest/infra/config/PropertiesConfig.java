@@ -6,6 +6,7 @@ import com.lotuslabs.rest.interfaces.Result;
 import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import com.lotuslabs.rest.model.actions.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -224,11 +225,30 @@ public class PropertiesConfig implements IConfig {
         return properties.getProperty("consulToken", System.getenv("CONSUL_TOKEN"));
     }
 
+    @Override
+    public Map<String,String> getHeaders(String name) {
+        return getPairs(name + ".headers.");
+    }
+
     public Map<String, String> getContext() {
         return properties.entrySet().stream()
                 .filter(e -> e.getKey().toString().startsWith("ctx."))
                 .collect(Collectors.toMap(k -> k.getKey().toString(),
                         v -> v.getValue().toString()));
 
+    }
+
+    private Map<String,String> getPairs(String propertyPrefix) {
+        Map<String,String> ret = new LinkedHashMap<>();
+        properties.forEach((k, v) -> {
+            final String key = k.toString();
+            final int index = key.indexOf(propertyPrefix);
+            if (index >= 0 ) {
+                String propertyName = key.substring(propertyPrefix.length());
+                propertyName = WordUtils.capitalizeFully(propertyName, '-');
+                ret.put(propertyName, v.toString());
+            }
+        });
+        return ret;
     }
 }

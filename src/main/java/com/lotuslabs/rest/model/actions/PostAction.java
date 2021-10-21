@@ -18,6 +18,7 @@ public class PostAction extends RestAction {
     public Map<String, ?> execute(RestContext restContext, IRestClient<Map<String, ?>, String> restClient) {
         String name = getName();
         return restClient.post(restContext.getURI(name), restContext.getBodyString(name),
+                restContext.getHeaders(name),
                 restContext.getNamedJsonPathExpression(name));
     }
 }

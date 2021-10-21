@@ -37,4 +37,6 @@ public interface IConfig {
     String getName();
 
     boolean ignoreFailure(String name);
+
+     Map<String,String> getHeaders(String name);
 }

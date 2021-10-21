@@ -20,6 +20,7 @@ public class PutAction extends RestAction {
         String name = getName();
         return restClient.put(restContext.getURI(name),
                 restContext.getBodyString(name), eTag,
+                restContext.getHeaders(name),
                 restContext.getNamedJsonPathExpression(name));
     }
 }

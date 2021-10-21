@@ -147,6 +147,10 @@ public class RestContext {
         context.put(SEQ_ID, System.currentTimeMillis());
     }
 
+    public Map<String, String> getHeaders(String name) {
+        return this.config.getHeaders(name);
+    }
+
     private interface QueryVisitor<T> {
         T visit(FreeTextQuery query);
     }

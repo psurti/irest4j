@@ -89,68 +89,75 @@ public class RestTemplateClient implements IRestClient<Map<String, ?>, String> {
         return ret;
     }
 
-    public RequestEntity.HeadersBuilder<?> createGetRequestEntity(URI finalUri) {
-        return RequestEntity.get(finalUri)
-                .header(HttpHeaders.AUTHORIZATION, getAuthorization())
+    public RequestEntity.HeadersBuilder<?> createGetRequestEntity(URI finalUri, Map<String, String> headers) {
+        final RequestEntity.HeadersBuilder<?> request = RequestEntity.get(finalUri);
+        headers.forEach(request::header);
+        request.header(HttpHeaders.AUTHORIZATION, getAuthorization())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE, "*/*")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CONSUL_TOKEN, this.consulToken)
                 .acceptCharset(StandardCharsets.UTF_8);
+        return request;
     }
 
-    public RequestEntity<Object> createPutRequestEntity(URI finalUri, Object body, String eTag) {
+    public RequestEntity<Object> createPutRequestEntity(URI finalUri, Object body, String eTag, Map<String, String> headers) {
         final RequestEntity.BodyBuilder put = RequestEntity.put(finalUri);
         if (eTag != null) {
             put.header(HttpHeaders.IF_MATCH, eTag);
         }
-        return createBodyBuilderRequestEntity(put, body);
+        return createBodyBuilderRequestEntity(put, body, headers);
     }
 
-    public RequestEntity<Object> createPatchRequestEntity(URI finalUri, Object body, String eTag) {
+    public RequestEntity<Object> createPatchRequestEntity(URI finalUri, Object body, String eTag, Map<String, String> headers) {
         final RequestEntity.BodyBuilder patch = RequestEntity.patch(finalUri);
         if (eTag != null) {
             patch.header(HttpHeaders.IF_MATCH, eTag);
         }
-        return createBodyBuilderRequestEntity(patch, body);
+        return createBodyBuilderRequestEntity(patch, body, headers);
     }
 
-    public RequestEntity<Object> createPostRequestEntity(URI finalUri, Object body) {
-        return createBodyBuilderRequestEntity(RequestEntity.post(finalUri), body);
+    public RequestEntity<Object> createPostRequestEntity(URI finalUri, Object body, Map<String, String> headers) {
+        return createBodyBuilderRequestEntity(RequestEntity.post(finalUri), body, headers);
     }
 
-    public RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(URI finalUri) {
-        return RequestEntity.delete(finalUri)
-                .header(HttpHeaders.AUTHORIZATION, getAuthorization())
+    public RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(URI finalUri, Map<String, String> headers) {
+        final RequestEntity.HeadersBuilder<?> request = RequestEntity.delete(finalUri);
+        headers.forEach(request::header);
+        request.header(HttpHeaders.AUTHORIZATION, getAuthorization())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE, "*/*")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CONSUL_TOKEN, this.consulToken)
                 .acceptCharset(StandardCharsets.UTF_8);
+        return request;
     }
 
-    private RequestEntity<Object> createBodyBuilderRequestEntity(RequestEntity.BodyBuilder builder, Object body) {
+    private RequestEntity<Object> createBodyBuilderRequestEntity(final RequestEntity.BodyBuilder builder, Object body,
+                                                                 Map<String, String> headers) {
         log.debug("Body length = " + body);
         String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
-        return builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        headers.forEach(builder::header);
+        builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CSRF_HEADER, X_CSRF_TOKEN)
                 .header(X_CSRF_TOKEN, csrf)
                 .header(HttpHeaders.AUTHORIZATION, getAuthorization())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .body(body);
+                .acceptCharset(StandardCharsets.UTF_8);
+        return builder.body(body);
     }
 
-    public RequestEntity<Object> createFormPostRequestEntity(URI finalUri, String body) {
+    public RequestEntity<Object> createFormPostRequestEntity(URI finalUri, String body, Map<String, String> headers) {
         String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
-        return RequestEntity.post(finalUri)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+        final RequestEntity.BodyBuilder request = RequestEntity.post(finalUri);
+        headers.forEach(request::header);
+        request.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .header(X_CSRF_HEADER, X_CSRF_TOKEN)
                 .header(X_CSRF_TOKEN, csrf)
                 .header(HttpHeaders.AUTHORIZATION, getAuthorization())
                 .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8)
-                .body(getFormBody(body));
+                .acceptCharset(StandardCharsets.UTF_8);
+        return request.body(getFormBody(body));
     }
 
     private Object getFormBody(String body) {
@@ -277,48 +284,48 @@ public class RestTemplateClient implements IRestClient<Map<String, ?>, String> {
 
 
     @Override
-    public Map<String, ?> delete(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> delete(URI finalUri, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
-                createDeleteRequestEntity(finalUri).build(),
+                createDeleteRequestEntity(finalUri, headers).build(),
                 String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> formPost(URI finalUri, String body, NamedJsonPathExpression... namedJsonPathExpressions) {
-        final RequestEntity<?> formPostRequestEntity = createFormPostRequestEntity(finalUri, body);
+    public Map<String, ?> formPost(URI finalUri, String body, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
+        final RequestEntity<?> formPostRequestEntity = createFormPostRequestEntity(finalUri, body, headers);
         final ResponseEntity<String> responseEntity = exchange(formPostRequestEntity, String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> put(URI finalUri, String body, String eTag, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> put(URI finalUri, String body, String eTag, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
-                createPutRequestEntity(finalUri, body, eTag),
+                createPutRequestEntity(finalUri, body, eTag, headers),
                 String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> patch(URI finalUri, String body, String eTag, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> patch(URI finalUri, String body, String eTag, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
-                createPatchRequestEntity(finalUri, body, eTag),
+                createPatchRequestEntity(finalUri, body, eTag, headers),
                 String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> get(URI finalUri, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> get(URI finalUri, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
-                createGetRequestEntity(finalUri).build(),
+                createGetRequestEntity(finalUri, headers).build(),
                 String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 
     @Override
-    public Map<String, ?> post(URI finalUri, String body, NamedJsonPathExpression... namedJsonPathExpressions) {
+    public Map<String, ?> post(URI finalUri, String body, Map<String,String> headers, NamedJsonPathExpression... namedJsonPathExpressions) {
         final ResponseEntity<String> responseEntity = exchange(
-                createPostRequestEntity(finalUri, body), String.class);
+                createPostRequestEntity(finalUri, body, headers), String.class);
         return parseJsonStringToMap(responseEntity, namedJsonPathExpressions);
     }
 }
