@@ -91,12 +91,15 @@ public class RestTemplateClient implements IRestClient<Map<String, ?>, String> {
 
     public RequestEntity.HeadersBuilder<?> createGetRequestEntity(URI finalUri, Map<String, String> headers) {
         final RequestEntity.HeadersBuilder<?> request = RequestEntity.get(finalUri);
-        headers.forEach(request::header);
-        request.header(HttpHeaders.AUTHORIZATION, getAuthorization())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE, "*/*")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8);
+        return getHeadersBuilder(headers, request);
+    }
+
+    private RequestEntity.HeadersBuilder<?> getHeadersBuilder(Map<String, String> headers, RequestEntity.HeadersBuilder<?> request) {
+        final Map<String, String> defaultHeaders = defaultHeaders();
+        defaultHeaders.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE + "," + "*/*");
+        defaultHeaders.remove(X_CSRF_HEADER);
+        defaultHeaders.remove(X_CSRF_TOKEN);
+        applyHeaders(headers, request, defaultHeaders);
         return request;
     }
 
@@ -122,42 +125,56 @@ public class RestTemplateClient implements IRestClient<Map<String, ?>, String> {
 
     public RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(URI finalUri, Map<String, String> headers) {
         final RequestEntity.HeadersBuilder<?> request = RequestEntity.delete(finalUri);
-        headers.forEach(request::header);
-        request.header(HttpHeaders.AUTHORIZATION, getAuthorization())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE, "*/*")
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8);
-        return request;
+        return getHeadersBuilder(headers, request);
     }
 
     private RequestEntity<Object> createBodyBuilderRequestEntity(final RequestEntity.BodyBuilder builder, Object body,
                                                                  Map<String, String> headers) {
         log.debug("Body length = " + body);
-        String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
-        headers.forEach(builder::header);
-        builder.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(X_CSRF_HEADER, X_CSRF_TOKEN)
-                .header(X_CSRF_TOKEN, csrf)
-                .header(HttpHeaders.AUTHORIZATION, getAuthorization())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8);
+        applyHeaders(headers, builder, defaultHeaders());
         return builder.body(body);
     }
 
     public RequestEntity<Object> createFormPostRequestEntity(URI finalUri, String body, Map<String, String> headers) {
-        String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
         final RequestEntity.BodyBuilder request = RequestEntity.post(finalUri);
-        headers.forEach(request::header);
-        request.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .header(X_CSRF_HEADER, X_CSRF_TOKEN)
-                .header(X_CSRF_TOKEN, csrf)
-                .header(HttpHeaders.AUTHORIZATION, getAuthorization())
-                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .header(X_CONSUL_TOKEN, this.consulToken)
-                .acceptCharset(StandardCharsets.UTF_8);
+        final Map<String,String> defaultHeaders = defaultHeaders();
+        //overwrite the the default content-type for form.
+        defaultHeaders.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+        applyHeaders(headers, request, defaultHeaders);
         return request.body(getFormBody(body));
+    }
+
+    private Map<String,String> defaultHeaders() {
+        String csrf = (xCsrfToken == null) ? "" : xCsrfToken;
+        Map<String,String> defaultHeaders = new LinkedHashMap<>();
+        defaultHeaders.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+        defaultHeaders.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        defaultHeaders.put(HttpHeaders.AUTHORIZATION, getAuthorization());
+        defaultHeaders.put(X_CSRF_TOKEN, csrf);
+        defaultHeaders.put(X_CSRF_HEADER, X_CSRF_TOKEN);
+        defaultHeaders.put(X_CONSUL_TOKEN, this.consulToken);
+        return defaultHeaders;
+    }
+
+    private void applyHeaders(final Map<String, String> headers, RequestEntity.HeadersBuilder<?> request,
+                              final Map<String,String> defaultHeaders) {
+
+        Map<String,String> mutableDefaultHeaders = new LinkedHashMap<>(defaultHeaders);
+        headers.forEach( (k,v) -> {
+            // if value is empty/null then do not add default header for it.
+            if (v == null || v.trim().length() == 0) {
+                mutableDefaultHeaders.remove(k);
+            } else {
+                request.header(k, v.split(","));
+            }
+        });
+
+        mutableDefaultHeaders.forEach( (k, v) -> {
+            if (!headers.containsKey(k) && v != null) {
+                request.header(k, v.split(","));
+            }
+        });
+        request.acceptCharset(StandardCharsets.UTF_8);
     }
 
     private Object getFormBody(String body) {
