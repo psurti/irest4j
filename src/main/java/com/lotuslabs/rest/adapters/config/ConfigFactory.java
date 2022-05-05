@@ -1,5 +1,7 @@
-package com.lotuslabs.rest.infra.config;
+package com.lotuslabs.rest.adapters.config;
 
+import com.lotuslabs.rest.domain.configuration.Configurable;
+import com.lotuslabs.rest.domain.configuration.Factory;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.FileSystemResource;
 
@@ -12,21 +14,20 @@ import java.util.Collection;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Objects;
 
-public class ConfigFactory {
-    private ConfigFactory() {
-    }
+public class ConfigFactory implements Factory {
 
+    public ConfigFactory() { }
 
-    public static Collection<PropertiesConfig> createAll(String configDir) throws IOException {
-        Collection<PropertiesConfig> ret = new ArrayList<>();
-        PropertiesConfig fileConfig = create(configDir, false);
+    public Collection<Configurable> createAll(String configDir) throws IOException {
+        final Collection<Configurable> ret = new ArrayList<>();
+        final Configurable fileConfig = create(configDir, false);
         if (fileConfig != null) {
             ret.add(fileConfig);
         } else {
             File dir = new File(configDir);
             File[] files = dir.listFiles();
             for (int i = 0; i < Objects.requireNonNull(files).length; i++) {
-                PropertiesConfig pc = create(files[i].getAbsolutePath(), false);
+                Configurable pc = create(files[i].getAbsolutePath(), false);
                 if (pc != null) {
                     ret.add(pc);
                 }
@@ -36,24 +37,24 @@ public class ConfigFactory {
         return ret;
     }
 
-    public static PropertiesConfig create(String configFile, boolean throwException) throws IOException {
-        PropertiesConfig ret = null;
+    public  Configurable create(String configFile, boolean throwException) throws IOException {
+        SimplePropertiesConfig ret = null;
         if (configFile.endsWith(".yaml")) {
             ret = createYamlProperties(configFile);
         } else if (configFile.endsWith(".properties")) {
-            ret = PropertiesConfig.create(configFile);
+            ret = SimplePropertiesConfig.create(configFile);
         } else {
             if (throwException) {
                 throw new InvalidPropertiesFormatException("Unsupported file");
             }
         }
-        return ret;
+        return new Configuration(ret);
     }
 
-    private static PropertiesConfig createYamlProperties(String configFile) {
+    private static SimplePropertiesConfig createYamlProperties(String configFile) {
         YamlPropertiesFactoryBean bean = new YamlPropertiesFactoryBean();
         bean.setResources(new FileSystemResource(configFile));
         final Path parent = Paths.get(configFile).getParent();
-        return new PropertiesConfig(parent, bean.getObject());
+        return new SimplePropertiesConfig(parent, bean.getObject());
     }
 }

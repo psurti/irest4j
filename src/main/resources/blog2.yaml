@@ -1,0 +1,21 @@
+vars:
+  url: https://jsonplaceholder.typicode.com
+http:
+  vars:
+    url: https://jsonplaceholder.typicode.com
+    username: "{{USERNAME}}" # from environment variable
+  getAllPosts:
+    vars:
+    description: Gets all the Blog Posts
+    uri: /posts
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    body:
+      inline: {}
+    response:
+      vars:
+        - userIdOfPost: $[?(@.title == 'laboriosam dolor voluptates')].userId
+      expect:
+        - matchId: userIdOfPost == 10
+

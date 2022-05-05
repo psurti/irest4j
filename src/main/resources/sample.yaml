@@ -1,0 +1,8 @@
+vars:
+  title: glossary.title
+  hasGML: glossary.GlossDiv.GlossList.GlossEntry.GlossDef.GlossSeeAlso.contains('GML')
+expect:
+  - {{title}} == 'foo'
+  - {{hasGML}} == true
+  - {{hasGML}}.length <= 3
+
