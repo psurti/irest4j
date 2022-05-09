@@ -24,9 +24,7 @@ class VariableTest {
 
 
         for (int i = 0; i < values.length; i++) {
-            Variable v = new Variable();
-            v.name = "var" + i;
-            v.value = values[i];
+            Variable v = new Variable("var" + i, values[i]);
             String expectValue = expect[i];
             final String resolveValue = v.resolveValue(new VariableContext());
             assertEquals(expectValue, resolveValue);

@@ -29,9 +29,13 @@ class SimplePropertiesConfigTest {
         for (Map.Entry<Object, Object> entry : expected.entrySet()) {
             sortedMap.put(entry.getKey().toString(), entry.getValue().toString());
         }
+        final TreeMap<String,String> actualMap = new TreeMap<>();
+        for (Map.Entry<Object, Object> entry : expected.entrySet()) {
+            actualMap.put(entry.getKey().toString(), entry.getValue().toString());
+        }
         System.out.println( sortedMap );
-        System.out.println( actual );
-        Assertions.assertIterableEquals(sortedMap.keySet(), actual.keySet());
+        System.out.println( actualMap );
+        Assertions.assertIterableEquals(sortedMap.keySet(), actualMap.keySet());
 
     }
 
