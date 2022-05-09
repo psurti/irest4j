@@ -1,4 +1,4 @@
-package com.lotuslabs.rest.interfaces;
+package com.lotuslabs.rest.domain;
 
 @SuppressWarnings("unused")
 public enum AnsiCode {

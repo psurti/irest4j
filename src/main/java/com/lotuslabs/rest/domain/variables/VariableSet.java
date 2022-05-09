@@ -1,5 +1,6 @@
 package com.lotuslabs.rest.domain.variables;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -49,4 +50,7 @@ public class VariableSet {
         return this.variables.get(name);
     }
 
+    public Collection<Variable> getVariables() {
+         return this.variables.values();
+    }
 }

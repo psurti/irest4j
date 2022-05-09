@@ -1,9 +1,9 @@
-package com.lotuslabs.rest.infra.config;
+package com.lotuslabs.rest.adapters.xjunit;
 
-import com.lotuslabs.rest.interfaces.Description;
-import com.lotuslabs.rest.interfaces.Failure;
-import com.lotuslabs.rest.interfaces.OutputListener;
-import com.lotuslabs.rest.interfaces.Result;
+import com.lotuslabs.rest.domain.xjunit.Description;
+import com.lotuslabs.rest.domain.xjunit.Failure;
+import com.lotuslabs.rest.domain.xjunit.OutputListener;
+import com.lotuslabs.rest.domain.xjunit.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;

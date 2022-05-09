@@ -68,12 +68,11 @@ public class Configuration implements Configurable {
 
     @Override
     public VariableSet getResponseVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.vars."));
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.vars["));
     }
 
-    @Override
-    public VariableSet getVariables(String propertyPath) {
-        return null;
+    public VariableSet getExpectationVariables(String name) {
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.expect["));
     }
 
     public Variable getAbsUrl(String name) {

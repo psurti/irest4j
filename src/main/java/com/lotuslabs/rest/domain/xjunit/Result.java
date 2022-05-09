@@ -1,4 +1,4 @@
-package com.lotuslabs.rest.interfaces;
+package com.lotuslabs.rest.domain.xjunit;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

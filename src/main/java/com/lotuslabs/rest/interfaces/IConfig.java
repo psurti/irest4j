@@ -1,7 +1,8 @@
 package com.lotuslabs.rest.interfaces;
 
+import com.lotuslabs.rest.domain.xjunit.OutputListener;
+import com.lotuslabs.rest.domain.xjunit.Result;
 import com.lotuslabs.rest.model.NamedJsonPathExpression;
-import com.lotuslabs.rest.model.actions.RestAction;
 
 import java.util.Map;
 
@@ -21,8 +22,6 @@ public interface IConfig {
     OutputListener getResultListener(Result result);
 
     Map<String, String> getContext();
-
-    RestAction[] getActions();
 
     String getPath(String name);
 

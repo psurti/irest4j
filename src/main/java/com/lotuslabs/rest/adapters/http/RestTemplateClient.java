@@ -1,13 +1,9 @@
 package com.lotuslabs.rest.adapters.http;
 
-import com.jayway.jsonpath.internal.JsonFormatter;
 import com.lotuslabs.rest.domain.configuration.Configurable;
-import com.lotuslabs.rest.model.NamedJsonPathExpression;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONValue;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +12,9 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author prsurt
@@ -61,22 +59,4 @@ public class RestTemplateClient  {
         return responseEntity;
     }
 
-
-    @SuppressWarnings("unchecked")
-    public Map<String, Object> evaluate(ResponseEntity<String> responseEntity, NamedJsonPathExpression... params) {
-        log.debug("{}", (responseEntity.getBody() != null) ? JsonFormatter.prettyPrint(responseEntity.getBody()) :
-                responseEntity.getBody());
-        final HttpHeaders headers = responseEntity.getHeaders();
-        final LinkedHashMap<String, Object> ret = new LinkedHashMap<>();
-        final Object val = JSONValue.parseKeepingOrder(responseEntity.getBody());
-        if (val instanceof List) {
-            ret.put(".", val);
-        } else if (val instanceof Map) {
-            ret.putAll((Map<? extends String, ?>) val);
-        } else if (val != null) {
-            throw new IllegalArgumentException("unsupported type " + val);
-        }
-        ret.putAll(headers);
-        return ret;
-    }
 }

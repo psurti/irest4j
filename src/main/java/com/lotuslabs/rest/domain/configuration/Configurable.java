@@ -21,9 +21,11 @@ public interface Configurable {
 
     VariableSet getResponseVariables(String name);
 
-    VariableSet getVariables(String propertyPath);
+    VariableSet getExpectationVariables(String name);
 
     Variable getAbsUrl(String name);
 
     String[] getAllActionNames();
+
+
 }

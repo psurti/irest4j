@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.io.IOException;
 import java.util.Collection;
 
 @Slf4j
@@ -24,16 +25,13 @@ public class Application {
 
     private final ExecuteAction action;
 
-    public Application(Configurable configurable) {
-        client = new RestTemplateClient(configurable);
-        action = new ExecuteAction();
+    public Application(Configurable configurable, RestTemplateClient client) {
+        this.client = client;
+        this.action = new ExecuteAction();
         this.configurable = configurable;
-        System.out.println( configurable.getRequestHeaders("getAllPosts"));
-        System.out.println( configurable.getAllRequestVariables());
-        System.out.println( configurable.getRequestVariables("getAllPosts"));
     }
 
-    void executeAll() {
+    void executeAll() throws IOException {
         action.execute(configurable, client);
     }
 
@@ -46,7 +44,8 @@ public class Application {
         Collection<Configurable> configs = new ConfigFactory().createAll(propertyFile);
 
         for (Configurable config : configs) {
-            Application app = new Application(config);
+            final RestTemplateClient client = new RestTemplateClient(config);
+            Application app = new Application(config, client);
             app.executeAll();
         }
     }

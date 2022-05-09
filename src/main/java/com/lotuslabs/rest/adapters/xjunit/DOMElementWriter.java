@@ -16,7 +16,7 @@
  *
  */
 
-package com.lotuslabs.rest.infra.config;
+package com.lotuslabs.rest.adapters.xjunit;
 
 import org.w3c.dom.*;
 
