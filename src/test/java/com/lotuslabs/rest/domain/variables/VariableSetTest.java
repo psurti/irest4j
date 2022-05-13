@@ -1,20 +1,20 @@
 package com.lotuslabs.rest.domain.variables;
 
 import com.lotuslabs.rest.adapters.config.Configuration;
+import com.lotuslabs.rest.adapters.config.LinkedProperties;
 import com.lotuslabs.rest.adapters.config.SimplePropertiesConfig;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Paths;
-import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VariableSetTest {
 
     @Test
     void resolveValues() {
         String username = System.getProperty("user.name");
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("vars.url", "foo");
         p.setProperty("vars.user", "{{USERNAME}}");
         p.setProperty("vars.userId", "{{user}}");

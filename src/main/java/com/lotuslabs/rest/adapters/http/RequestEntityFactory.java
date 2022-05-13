@@ -1,4 +1,4 @@
-package com.lotuslabs.rest.adapters.config.http;
+package com.lotuslabs.rest.adapters.http;
 
 import com.lotuslabs.rest.domain.configuration.Configurable;
 import com.lotuslabs.rest.domain.variables.VariableContext;

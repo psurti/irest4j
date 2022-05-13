@@ -1,7 +1,7 @@
 package com.lotuslabs.rest.domain;
 
 import com.jayway.jsonpath.JsonPath;
-import com.lotuslabs.rest.adapters.config.http.RequestEntityFactory;
+import com.lotuslabs.rest.adapters.http.RequestEntityFactory;
 import com.lotuslabs.rest.adapters.http.RestTemplateClient;
 import com.lotuslabs.rest.adapters.spel.MapAccessor;
 import com.lotuslabs.rest.domain.configuration.Configurable;

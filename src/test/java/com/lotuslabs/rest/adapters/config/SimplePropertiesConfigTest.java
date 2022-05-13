@@ -11,7 +11,7 @@ class SimplePropertiesConfigTest {
     @Test
     void startsWith() {
 
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -41,7 +41,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void startsWithPrefixStrip_partialPrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -62,7 +62,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void startsWithPrefixStrip_completePrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -71,7 +71,7 @@ class SimplePropertiesConfigTest {
         p.setProperty("http.getAllPosts1.description", "5");
         p.setProperty("http.getAllPosts1.foo.getBar", "6");
         final SimplePropertiesConfig propertiesConfig = new SimplePropertiesConfig(Paths.get("."), p);
-        final Map<String, String> actual = propertiesConfig.startsWithPrefixStrip("http.");
+        final Map<String, String> actual = new TreeMap<>(propertiesConfig.startsWithPrefixStrip("http."));
         final TreeMap<String, String> expected = new TreeMap<>();
         expected.put("vars","0");
         expected.put("getAllPosts", "1");
@@ -89,7 +89,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void startsWithSuffixStrip_partialPrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -110,7 +110,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void startsWithSuffixStrip_completePrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -130,7 +130,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void nextMatch_completePrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
@@ -139,7 +139,7 @@ class SimplePropertiesConfigTest {
         p.setProperty("http.getAllPosts1.description", "2");
         p.setProperty("http.getAllPosts1.foo.getBar", "3");
         final SimplePropertiesConfig propertiesConfig = new SimplePropertiesConfig(Paths.get("."), p);
-        final Collection<String> actual = propertiesConfig.nextExactMatch("http");
+        final Collection<String> actual = new TreeSet<>(propertiesConfig.nextExactMatch("http"));
         Collections.sort(new ArrayList<>(actual));
         final TreeMap<String, String> expected = new TreeMap<>();
         expected.put("vars", "0");
@@ -152,7 +152,7 @@ class SimplePropertiesConfigTest {
 
     @Test
     void nextMatch_partialPrefix() {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         p.setProperty("http.vars", "0");
         p.setProperty("http.getAllPosts", "1");
         p.setProperty("http.getAllPosts.description", "2");
