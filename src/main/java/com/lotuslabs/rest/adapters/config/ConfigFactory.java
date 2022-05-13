@@ -2,6 +2,7 @@ package com.lotuslabs.rest.adapters.config;
 
 import com.lotuslabs.rest.domain.configuration.Configurable;
 import com.lotuslabs.rest.domain.configuration.Factory;
+import org.springframework.beans.factory.config.YamlMapFactoryBean;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.io.FileSystemResource;
 
@@ -40,7 +41,7 @@ public class ConfigFactory implements Factory {
     public  Configurable create(String configFile, boolean throwException) throws IOException {
         SimplePropertiesConfig ret = null;
         if (configFile.endsWith(".yaml")) {
-            ret = createYamlProperties(configFile);
+            ret = createYamlLinkedMap(configFile);
         } else if (configFile.endsWith(".properties")) {
             ret = SimplePropertiesConfig.create(configFile);
         } else {
@@ -55,6 +56,13 @@ public class ConfigFactory implements Factory {
         YamlPropertiesFactoryBean bean = new YamlPropertiesFactoryBean();
         bean.setResources(new FileSystemResource(configFile));
         final Path parent = Paths.get(configFile).getParent();
-        return new SimplePropertiesConfig(parent, bean.getObject());
+        return new SimplePropertiesConfig(parent, new LinkedProperties(bean.getObject()));
+    }
+
+    public static SimplePropertiesConfig createYamlLinkedMap(String configFile) {
+        YamlMapFactoryBean bean = new YamlMapFactoryBean();
+        bean.setResources(new FileSystemResource(configFile));
+        final Path parent = Paths.get(configFile).getParent();
+        return new SimplePropertiesConfig(parent, new LinkedProperties(bean.getObject()));
     }
 }

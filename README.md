@@ -29,26 +29,26 @@ The project uses `gradle` to build. Gradle version: `6.8.1`
 To build the project just run the following command:
 
 ```shell
-gradlew clean bootJar run --args=src\main\resources\blog.properties
-gradlew clean bootJar run --args=src\main\resources\blog.yaml -Dlogback.configurationFile=build\resources\main\logback.xml
+gradlew clean bootJar run --args=src\main\resources\blog2.properties
+gradlew clean bootJar run --args=src\main\resources\blog2.yaml -Dlogback.configurationFile=build\resources\main\logback.xml
 ```
 
 ### Running the tool
 
 ```
 java -jar irest4j-x.y.jar <path-to-properties-file>
-# eg. java -jar build\libs\irest4j-1.0.jar build\resources\main\blog.properties
+# eg. java -jar build\libs\irest4j-2.0.jar build\resources\main\blog2.properties
 
 ## To override logging level 
 #  Change log level in logback.xml 
-#  java -Dlogback.configurationFile=build\resources\main\logback.xml -jar build\libs\irest4j-1.0.jar build\resources\main\blog.properties
+#  java -Dlogback.configurationFile=build\resources\main\logback.xml -jar build\libs\irest4j-2.0.jar build\resources\main\blog2.properties
 ```
 
 ### Configuration Properties
 
 #### Global Level
 
-Configuration can be specified using YAML or properties file. Please see `blog.properties` or `blog.yaml` for examples.
+Configuration can be specified using YAML or properties file. Please see `blog2.properties` or `blog2.yaml` for examples.
 
 Property **host** is the URL used to identify the REST server.
 

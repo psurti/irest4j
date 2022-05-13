@@ -111,10 +111,12 @@ public class ExecuteAction {
         context.setVariable("json", variableContext.toMap());
         final Collection<Variable> variables = expectationVariables.getVariables();
         for (Variable variable : variables) {
+            System.out.println( variable );
             final String exp = variable.resolveJsonValue(variableContext);
             System.out.println( "expectation exp:" + exp);
             final Expression expression = parser.parseExpression(exp);
             final Object value = expression.getValue(context, Object.class);
+            System.out.println( "#" + variable.name() + "=" + value);
             context.setVariable(variable.name(), value);
             StringBuilder jsonData = new StringBuilder();
             JSONValue.writeJSONString(value, jsonData);

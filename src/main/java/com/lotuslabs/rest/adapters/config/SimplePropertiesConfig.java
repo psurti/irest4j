@@ -6,19 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Properties;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Function;
 
 @Slf4j
 public class SimplePropertiesConfig {
-    final Properties properties;
+    final LinkedProperties properties;
     private final String propertyPath;
 
     static SimplePropertiesConfig create(String propertyFile) throws IOException {
-        Properties p = new Properties();
+        LinkedProperties p = new LinkedProperties();
         try (FileReader fr = new FileReader(propertyFile)) {
             p.load(fr);
         }
@@ -26,9 +23,9 @@ public class SimplePropertiesConfig {
         return new SimplePropertiesConfig(parent, p);
     }
 
-    public SimplePropertiesConfig(Path parent, Properties properties) {
+    public SimplePropertiesConfig(Path parent, LinkedProperties properties) {
         if (properties == null)
-            properties = new Properties();
+            properties = new LinkedProperties();
         String propertyPath = ".";
         if (parent != null) {
             propertyPath = parent.toString();
@@ -104,16 +101,15 @@ public class SimplePropertiesConfig {
     }
 
     private Map<String,String> getProperties(Function<PropertyNameSeparator,String> fx, String... propertyPrefixes) {
-        final Map<String,String> ret = new TreeMap<>();
+        final Map<String,String> ret = new LinkedHashMap<>();
         properties.forEach((k, v) -> {
-            final String key = k.toString();
             for (String propertyPrefix : propertyPrefixes) {
                 boolean isTerminalPrefix = (propertyPrefix.endsWith("."));
-                final int matchedPrefixIndex = key.indexOf(propertyPrefix);
+                final int matchedPrefixIndex = k.indexOf(propertyPrefix);
                 if (matchedPrefixIndex >= 0) { // http.getYYY
                     int completePrefixIndex = matchedPrefixIndex + propertyPrefix.length();
                     if (!isTerminalPrefix) {
-                        final int i = key.indexOf('.', propertyPrefix.length());
+                        final int i = k.indexOf('.', propertyPrefix.length());
                         if (i >= 0) {
                             completePrefixIndex =  i + 1;
                         } else {
@@ -121,10 +117,10 @@ public class SimplePropertiesConfig {
                         }
                     }
                     PropertyNameSeparator pns = new PropertyNameSeparator();
-                    pns.propertyName = key;
+                    pns.propertyName = k;
                     pns.separatorOffset = completePrefixIndex;
                     final String newPropertyName = fx.apply(pns);
-                    ret.put(newPropertyName, v.toString());
+                    ret.put(newPropertyName, v);
                 }
             }
         });
