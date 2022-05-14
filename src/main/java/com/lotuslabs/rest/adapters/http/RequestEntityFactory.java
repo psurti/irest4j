@@ -17,6 +17,31 @@ import java.util.Map;
 @Slf4j
 public class RequestEntityFactory {
 
+    public static final String URL = "url";
+
+    public static RequestEntity<?> createRequestEntity(VariableContext variableContext,
+                                                       String actionName,
+                                                       Configurable configurable) {
+        RequestEntity<?> requestEntity = null;
+
+        if (actionName.startsWith("delete")) {
+            requestEntity = RequestEntityFactory.createDeleteRequestEntity(variableContext, actionName, configurable).build();
+        } else if (actionName.startsWith("get")) {
+            requestEntity = RequestEntityFactory.createGetRequestEntity(variableContext, actionName, configurable).build();
+        } else if (actionName.startsWith("post")) {
+            requestEntity = RequestEntityFactory.createPostRequestEntity(variableContext, actionName, configurable);
+        } else if (actionName.startsWith("patch")) {
+            requestEntity = RequestEntityFactory.createPatchRequestEntity(variableContext, actionName, configurable);
+        }  else if (actionName.startsWith("put")) {
+            requestEntity = RequestEntityFactory.createPutRequestEntity(variableContext, actionName, configurable);
+        }  else if (actionName.startsWith("form")) {
+            requestEntity = RequestEntityFactory.createFormPostRequestEntity(variableContext, actionName, configurable);
+        } else {
+            throw new IllegalArgumentException("invalid action name: " + actionName );
+        }
+
+        return requestEntity;
+    }
 
     private static VariableSet createRequestVariableSet(VariableContext requestContext,
                                                         Configurable configurable, String name) {
@@ -27,41 +52,52 @@ public class RequestEntityFactory {
         return set;
     }
 
-    public static RequestEntity<Object> createPatchRequestEntity(VariableContext requestContext,
+    private static RequestEntity<Object> createPatchRequestEntity(VariableContext requestContext,
                                                                  String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
-        final RequestEntity.BodyBuilder patch = RequestEntity.patch(variableSet.getVariable("uri").value());
-        return createBodyBuilderRequestEntity(configurable.getRequestHeaders(name), patch, variableSet);
+        final RequestEntity.BodyBuilder patch = RequestEntity.patch(variableSet.getVariable(URL).value());
+        final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        applyIfMatchHeader(requestContext, requestHeaders);
+        return createBodyBuilderRequestEntity(requestHeaders, patch, variableSet);
     }
 
-    public static RequestEntity<Object> createPostRequestEntity(VariableContext requestContext, String name,
+    private static void applyIfMatchHeader(VariableContext requestContext, Map<String, String> requestHeaders) {
+        final Object etag = requestContext.getOrDefault(HttpHeaders.ETAG, null);
+        if (etag != null) {
+            requestHeaders.put(HttpHeaders.IF_MATCH, String.valueOf(etag));
+        }
+    }
+
+    private static RequestEntity<Object> createPostRequestEntity(VariableContext requestContext, String name,
                                                                 Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
-        final RequestEntity.BodyBuilder post = RequestEntity.post(variableSet.getVariable("uri").value());
+        final RequestEntity.BodyBuilder post = RequestEntity.post(variableSet.getVariable(URL).value());
         return createBodyBuilderRequestEntity( configurable.getRequestHeaders(name), post, variableSet);
     }
 
-    public static RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(VariableContext requestContext,
+    private static RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(VariableContext requestContext,
                                                                             String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
-        final RequestEntity.HeadersBuilder<?> delete = RequestEntity.delete(variableSet.getVariable("uri").value());
+        final RequestEntity.HeadersBuilder<?> delete = RequestEntity.delete(variableSet.getVariable(URL).value());
         return getHeadersBuilder( configurable.getRequestHeaders(name), delete);
     }
 
 
-    public static RequestEntity<Object> createPutRequestEntity(VariableContext requestContext,
+    private static RequestEntity<Object> createPutRequestEntity(VariableContext requestContext,
                                                                String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
-        final RequestEntity.BodyBuilder put = RequestEntity.put(variableSet.getVariable("uri").value());
-        return createBodyBuilderRequestEntity( configurable.getRequestHeaders(name), put, variableSet);
+        final RequestEntity.BodyBuilder put = RequestEntity.put(variableSet.getVariable(URL).value());
+        final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        applyIfMatchHeader(requestContext, requestHeaders);
+        return createBodyBuilderRequestEntity( requestHeaders, put, variableSet);
     }
 
 
-    public static RequestEntity<Object> createFormPostRequestEntity(VariableContext requestContext,
+    private static RequestEntity<Object> createFormPostRequestEntity(VariableContext requestContext,
                                                                     String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
 
-        final RequestEntity.BodyBuilder request = RequestEntity.post(variableSet.getVariable("uri").value());
+        final RequestEntity.BodyBuilder request = RequestEntity.post(variableSet.getVariable(URL).value());
         final Map<String,String> defaultHeaders = defaultHeaders();
         //overwrite the default content-type for form.
         defaultHeaders.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
@@ -70,8 +106,8 @@ public class RequestEntityFactory {
         return request.body(getFormBody(body));
     }
 
-    public static RequestEntity.HeadersBuilder<?> createGet(VariableContext requestContext,
-                                                            String name, Configurable configurable) {
+    private static RequestEntity.HeadersBuilder<?> createGetRequestEntity(VariableContext requestContext,
+                                                                         String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
         final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
         final String uri = variableSet.getVariable("url").value();

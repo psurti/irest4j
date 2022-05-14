@@ -31,8 +31,9 @@ class ExecuteActionTest {
         final String body = readFile("store.json");
         VariableSet responseVariables = VariableSet.create(Collections.emptyMap());
         VariableSet expectationVariables = VariableSet.create(Collections.emptyMap());
+        VariableSet headerVariables = VariableSet.create(Collections.emptyMap());
         responseVariables.addVariable(Variable.create("thirdBook", "$.store.books[2]")); // get 3rd book record
-        action.evaluate(ctx, body, "OK", 200, responseVariables, expectationVariables);
+        action.evaluate(ctx, headerVariables, body, "OK", 200, responseVariables, expectationVariables);
         final Object result = ctx.getOrDefault("thirdBook.json", "");
         System.out.println("json="+result);
         final long actualSum = getCRC32Checksum(result.toString().getBytes(StandardCharsets.UTF_8));
@@ -49,8 +50,9 @@ class ExecuteActionTest {
         final String body = readFile("store.json");
         VariableSet responseVariables = VariableSet.create(Collections.emptyMap());
         VariableSet expectationVariables = VariableSet.create(Collections.emptyMap());
+        VariableSet headerVariables = VariableSet.create(Collections.emptyMap());
         responseVariables.addVariable(Variable.create("firstBookSection", "$.store.books[0].sections")); // get 3rd book record
-        action.evaluate(ctx, body, "OK", 200, responseVariables, expectationVariables);
+        action.evaluate(ctx, headerVariables, body, "OK", 200, responseVariables, expectationVariables);
         final Object result = ctx.getOrDefault("firstBookSection", "");
         System.out.println("json="+result);
         final List<Object> actual = (List<Object>) JSONValue.parseKeepingOrder(result.toString());

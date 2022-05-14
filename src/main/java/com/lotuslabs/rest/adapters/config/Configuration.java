@@ -25,7 +25,7 @@ public class Configuration implements Configurable {
     }
 
     public Variable getRequestBody(String name) {
-        final String variableName = name + ".body";
+        final String variableName = "http." + name + ".body";
         final String value = propertiesConfig.getProperty(variableName, null);
         final String bodyData = getBodyData(value, propertiesConfig.getPropertyPath());
         return Variable.create("body", bodyData);
@@ -46,7 +46,7 @@ public class Configuration implements Configurable {
     }
 
     public VariableContext addResponseContext(final VariableContext requestContext, final String name) {
-        getResponseVariables(name).resolveValues(requestContext);
+        getArrangeVariables(name).resolveValues(requestContext);
         return requestContext;
     }
 
@@ -67,12 +67,17 @@ public class Configuration implements Configurable {
     }
 
     @Override
-    public VariableSet getResponseVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.vars["));
+    public VariableSet getArrangeVariables(String name) {
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.arrange["));
     }
 
-    public VariableSet getExpectationVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.expect["));
+    public VariableSet getActVariables(String name) {
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.act["));
+    }
+
+    public Variable getAssertVariable(String name) {
+        final String assertProperty = propertiesConfig.getProperty("http." + name + ".response.assert", null);
+        return Variable.create("assert", assertProperty);
     }
 
     public Variable getAbsUrl(String name) {

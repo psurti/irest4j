@@ -4,11 +4,14 @@
         <!-- encoders are assigned the type
              ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
         <encoder>
+            <!--
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            -->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
         </encoder>
     </appender>
     <logger name="com.lotuslabs.rest.infra.client.RestTemplateClient" level="INFO"/>
-    <root level="warn">
+    <root level="info">
         <appender-ref ref="STDOUT"/>
     </root>
     <!-- <include file="logback-ext.xml" optional="true"/>-->

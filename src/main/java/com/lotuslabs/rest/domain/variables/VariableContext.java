@@ -13,7 +13,9 @@ public class VariableContext {
     }
 
     public void setVariable(String variableName, Object value) {
-        this.variables.put(variableName, value);
+        if (value != null && variableName != null) {
+            this.variables.put(variableName, value);
+        }
     }
 
     public Map<String,Object> toMap() {
@@ -28,7 +30,7 @@ public class VariableContext {
         return this.variables.keySet();
     }
 
-    public Object getOrDefault(String variableName, String defaultValue) {
+    public Object getOrDefault(String variableName, Object defaultValue) {
         return this.variables.getOrDefault(variableName, defaultValue);
     }
 
@@ -44,5 +46,9 @@ public class VariableContext {
         return "VariableContext{" +
                 "variables=" + variables +
                 '}';
+    }
+
+    public void remove(String variableName) {
+        this.variables.remove(variableName);
     }
 }

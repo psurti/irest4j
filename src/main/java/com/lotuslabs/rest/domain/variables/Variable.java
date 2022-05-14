@@ -13,6 +13,10 @@ import java.util.regex.Pattern;
 public class Variable {
     private static final Pattern templates = Pattern.compile("\\{\\{([A-Za-z0-9._]+)(:*)([A-Za-z0-9.]*)\\}\\}");
 
+    public void remove(VariableContext variableContext) {
+        variableContext.remove(this.name);
+    }
+
     enum VariableType {
         NIL,
         NUMBER,
@@ -75,7 +79,7 @@ public class Variable {
 
                 }
                 String val = substitutedData.get().replaceAll("\\{\\{" + t[0] + t[1] + t[2] + "\\}\\}",  String.valueOf(t[3]));
-                log.info("===>{}", val);
+                log.debug("=>{}", val);
                 substitutedData.set(val);
             }
         });
@@ -83,6 +87,14 @@ public class Variable {
         this.value = substitutedData.get();
         return substitutedData.get();
 
+    }
+
+    public static Variable create(String key, List<String> values) {
+        Variable variable = null;
+        if (key != null) {
+            variable = new Variable(key, values);
+        }
+        return variable;
     }
 
     public static Variable create(String key, String value) {

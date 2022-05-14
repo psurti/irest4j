@@ -1,7 +1,10 @@
 package com.lotuslabs.rest.domain.variables;
 
+import org.springframework.util.MultiValueMap;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VariableSet {
@@ -12,6 +15,17 @@ public class VariableSet {
         variables.forEach( (k, v) -> {
             v.resolveValue(variableContext);
         });
+    }
+
+    public static VariableSet create(MultiValueMap<String, String> mvp) {
+        final VariableSet ret = new VariableSet();
+        for (Map.Entry<String, List<String>> entry : mvp.entrySet()) {
+            Variable variable = Variable.create(entry.getKey(), entry.getValue());
+            if (variable != null) {
+                ret.addVariable(variable);
+            }
+        }
+        return ret;
     }
 
     public static VariableSet create(Map<String,String> objectMap) {
