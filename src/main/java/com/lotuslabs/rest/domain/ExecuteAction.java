@@ -39,7 +39,7 @@ public class ExecuteAction {
             requestEntity = RequestEntityFactory.createRequestEntity(variableContext, actionName, configurable);
             final ResponseEntity<String> result = client.exchange(requestEntity, String.class);
             log.info("{}{}({}){}", ANSI_CYAN, actionName, result.getStatusCode(), ANSI_RESET);
-            log.info("{}{}{}", ANSI_CYAN, requestEntity, ANSI_RESET);
+            log.info("{}{}{}", ANSI_CYAN, requestEntity.toString().split(",")[0], ANSI_RESET);
             final String resultBody = result.getBody();
             final String statusCode = result.getStatusCode().name();
             final int statusCodeValue = result.getStatusCodeValue();
