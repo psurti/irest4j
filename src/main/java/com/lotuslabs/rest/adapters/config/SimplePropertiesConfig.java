@@ -100,12 +100,17 @@ public class SimplePropertiesConfig {
         return ret.keySet();
     }
 
+    public Map<String,String> nextPartialMatchProperties(String... propertyPrefixes) {
+        return getProperties(nextPartialMatch, propertyPrefixes);
+    }
+
     private Map<String,String> getProperties(Function<PropertyNameSeparator,String> fx, String... propertyPrefixes) {
         final Map<String,String> ret = new LinkedHashMap<>();
         properties.forEach((k, v) -> {
             for (String propertyPrefix : propertyPrefixes) {
                 boolean isTerminalPrefix = (propertyPrefix.endsWith("."));
                 final int matchedPrefixIndex = k.indexOf(propertyPrefix);
+
                 if (matchedPrefixIndex >= 0) { // http.getYYY
                     int completePrefixIndex = matchedPrefixIndex + propertyPrefix.length();
                     if (!isTerminalPrefix) {
@@ -113,14 +118,17 @@ public class SimplePropertiesConfig {
                         if (i >= 0) {
                             completePrefixIndex =  i + 1;
                         } else {
-                            continue;
+                            completePrefixIndex = k.length();
                         }
                     }
+
                     PropertyNameSeparator pns = new PropertyNameSeparator();
                     pns.propertyName = k;
                     pns.separatorOffset = completePrefixIndex;
                     final String newPropertyName = fx.apply(pns);
-                    ret.put(newPropertyName, v);
+                    if (!newPropertyName.isEmpty()) {
+                        ret.put(newPropertyName, v);
+                    }
                 }
             }
         });

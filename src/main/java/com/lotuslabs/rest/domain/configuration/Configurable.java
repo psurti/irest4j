@@ -19,11 +19,11 @@ public interface Configurable {
 
     VariableSet getRequestVariables(String name);
 
-    VariableSet getArrangeVariables(String name);
+    VariableSet getAssignVariables(String name);
 
-    VariableSet getActVariables(String name);
+    VariableSet getEvaluateVariables(String name);
 
-    Variable getAssertVariable(String name);
+    VariableSet  getAssertVariables(String name);
 
     Variable getAbsUrl(String name);
 

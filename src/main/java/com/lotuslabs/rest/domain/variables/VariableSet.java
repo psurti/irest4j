@@ -47,6 +47,13 @@ public class VariableSet {
         this.variables.put(variable.name, variable);
     }
 
+    public void addVariables(VariableSet variableSet) {
+        final Collection<Variable> variableCollection = variableSet.getVariables();
+        for (Variable variable : variableCollection) {
+            this.variables.put(variable.name, variable);
+        }
+    }
+
     public VariableSet(Variable... variables){
         this.variables = new LinkedHashMap<>();
         for (Variable v : variables) {
@@ -67,4 +74,6 @@ public class VariableSet {
     public Collection<Variable> getVariables() {
          return this.variables.values();
     }
+
 }
+

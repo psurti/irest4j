@@ -46,7 +46,7 @@ public class Configuration implements Configurable {
     }
 
     public VariableContext addResponseContext(final VariableContext requestContext, final String name) {
-        getArrangeVariables(name).resolveValues(requestContext);
+        getAssignVariables(name).resolveValues(requestContext);
         return requestContext;
     }
 
@@ -67,17 +67,16 @@ public class Configuration implements Configurable {
     }
 
     @Override
-    public VariableSet getArrangeVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.arrange["));
+    public VariableSet getAssignVariables(String name) {
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.assign["));
     }
 
-    public VariableSet getActVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.act["));
+    public VariableSet getEvaluateVariables(String name) {
+        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.eval["));
     }
 
-    public Variable getAssertVariable(String name) {
-        final String assertProperty = propertiesConfig.getProperty("http." + name + ".response.assert", null);
-        return Variable.create("assert", assertProperty);
+    public VariableSet getAssertVariables(String name) {
+        return VariableSet.create(propertiesConfig.nextPartialMatchProperties("http." + name + ".response.assert["));
     }
 
     public Variable getAbsUrl(String name) {

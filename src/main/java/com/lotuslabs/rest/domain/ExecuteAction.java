@@ -44,10 +44,14 @@ public class ExecuteAction {
             final String statusCode = result.getStatusCode().name();
             final int statusCodeValue = result.getStatusCodeValue();
             final VariableSet headerVariables = VariableSet.create(result.getHeaders());
-            final VariableSet assignVariables = configurable.getArrangeVariables(actionName);
-            final VariableSet evaluateVariables = configurable.getActVariables(actionName);
+            final VariableSet assignVariables = configurable.getAssignVariables(actionName);
+            final VariableSet evaluateVariables = configurable.getEvaluateVariables(actionName);
+            final VariableSet assertVariables  = configurable.getAssertVariables(actionName);
+            evaluateVariables.addVariables(assertVariables);
+            /*
             final Variable assertVariable = configurable.getAssertVariable(actionName);
             evaluateVariables.addVariable(assertVariable);
+             */
             final Variable etagVariable = headerVariables.getVariable(HttpHeaders.ETAG);
             if (etagVariable != null) {
                 variableContext.setVariable(HttpHeaders.ETAG, etagVariable );
