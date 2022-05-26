@@ -110,6 +110,9 @@ public class RequestEntityFactory {
                                                                          String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
         final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        requestHeaders.forEach((k,v) -> {
+            requestHeaders.put(k, variableSet.getVariable(k).value());
+        });
         final String uri = variableSet.getVariable("url").value();
         final RequestEntity.HeadersBuilder<?> request = RequestEntity.get(uri);
         return getHeadersBuilder(requestHeaders, request);
