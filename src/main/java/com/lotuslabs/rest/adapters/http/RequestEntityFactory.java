@@ -71,15 +71,19 @@ public class RequestEntityFactory {
     private static RequestEntity<Object> createPostRequestEntity(VariableContext requestContext, String name,
                                                                 Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
+        final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        requestHeaders.forEach((k,v) -> requestHeaders.put(k, variableSet.getVariable(k).value()));
         final RequestEntity.BodyBuilder post = RequestEntity.post(variableSet.getVariable(URL).value());
-        return createBodyBuilderRequestEntity( configurable.getRequestHeaders(name), post, variableSet);
+        return createBodyBuilderRequestEntity(requestHeaders, post, variableSet);
     }
 
     private static RequestEntity.HeadersBuilder<?> createDeleteRequestEntity(VariableContext requestContext,
                                                                             String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
+        final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        requestHeaders.forEach((k,v) -> requestHeaders.put(k, variableSet.getVariable(k).value()));
         final RequestEntity.HeadersBuilder<?> delete = RequestEntity.delete(variableSet.getVariable(URL).value());
-        return getHeadersBuilder( configurable.getRequestHeaders(name), delete);
+        return getHeadersBuilder( requestHeaders, delete);
     }
 
 
@@ -88,6 +92,7 @@ public class RequestEntityFactory {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
         final RequestEntity.BodyBuilder put = RequestEntity.put(variableSet.getVariable(URL).value());
         final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        requestHeaders.forEach((k,v) -> requestHeaders.put(k, variableSet.getVariable(k).value()));
         applyIfMatchHeader(requestContext, requestHeaders);
         return createBodyBuilderRequestEntity( requestHeaders, put, variableSet);
     }
@@ -101,7 +106,9 @@ public class RequestEntityFactory {
         final Map<String,String> defaultHeaders = defaultHeaders();
         //overwrite the default content-type for form.
         defaultHeaders.put(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
-        applyHeaders(configurable.getRequestHeaders(name), request, defaultHeaders);
+        final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
+        requestHeaders.forEach((k,v) -> requestHeaders.put(k, variableSet.getVariable(k).value()));
+        applyHeaders(requestHeaders, request, defaultHeaders);
         final String body = variableSet.getVariable("body").value();
         return request.body(getFormBody(body));
     }
@@ -110,9 +117,7 @@ public class RequestEntityFactory {
                                                                          String name, Configurable configurable) {
         final VariableSet variableSet = createRequestVariableSet(requestContext, configurable, name);
         final Map<String, String> requestHeaders = configurable.getRequestHeaders(name);
-        requestHeaders.forEach((k,v) -> {
-            requestHeaders.put(k, variableSet.getVariable(k).value());
-        });
+        requestHeaders.forEach((k,v) -> requestHeaders.put(k, variableSet.getVariable(k).value()));
         final String uri = variableSet.getVariable("url").value();
         final RequestEntity.HeadersBuilder<?> request = RequestEntity.get(uri);
         return getHeadersBuilder(requestHeaders, request);

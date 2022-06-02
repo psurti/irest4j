@@ -1,15 +1,26 @@
 package com.lotuslabs.rest.domain.variables;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.lotuslabs.rest.domain.variables.Variable.VariableType.NIL;
+
+@Slf4j
 public class VariableContext {
+    private static final Object NIL_VALUE = "{{nil}}";
+
     private final Map<String,Object> variables;
 
     public VariableContext() {
         this.variables = new ConcurrentHashMap<>();
+    }
+
+    public void setNilVariable(String variableName) {
+        setVariable(variableName, NIL_VALUE);
     }
 
     public void setVariable(String variableName, Object value) {

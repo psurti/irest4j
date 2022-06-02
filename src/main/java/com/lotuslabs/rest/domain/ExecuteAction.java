@@ -1,6 +1,7 @@
 package com.lotuslabs.rest.domain;
 
 import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.internal.JsonFormatter;
 import com.lotuslabs.rest.adapters.http.RequestEntityFactory;
 import com.lotuslabs.rest.adapters.http.RestTemplateClient;
 import com.lotuslabs.rest.adapters.spel.MapAccessor;
@@ -40,7 +41,8 @@ public class ExecuteAction {
             final ResponseEntity<String> result = client.exchange(requestEntity, String.class);
             log.info("{}{}({}){}", ANSI_CYAN, actionName, result.getStatusCode(), ANSI_RESET);
             log.info("{}{}{}", ANSI_CYAN, requestEntity.toString().split(",")[0], ANSI_RESET);
-            final String resultBody = result.getBody();
+            final String rBody = result.getBody();
+            final String resultBody = rBody != null ? rBody.trim() : null;
             final String statusCode = result.getStatusCode().name();
             final int statusCodeValue = result.getStatusCodeValue();
             final VariableSet headerVariables = VariableSet.create(result.getHeaders());
@@ -82,15 +84,15 @@ public class ExecuteAction {
                    VariableSet assignVariables, VariableSet evaluationVariables) throws IOException {
         variableContext.setVariable("status", statusCode);
         variableContext.setVariable("statusCode", statusCodeValue);
-        if (resultBody != null) {
-            if ((resultBody.startsWith("{") && resultBody.endsWith("}"))
-                    || ((resultBody.startsWith("[") && resultBody.endsWith("]")))) {
+        if (resultBody != null && resultBody.startsWith("{") && resultBody.endsWith("}") ||
+                resultBody != null && resultBody.startsWith("[") && resultBody.endsWith("]")
+        ) {
+
                 variableContext.setVariable("json", resultBody);
                 // Arrange
                 assignJson(variableContext, assignVariables);
                 // Act
                 evaluate(variableContext, evaluationVariables);
-            }
         }
     }
 
@@ -100,7 +102,14 @@ public class ExecuteAction {
         for (String key : entries.keySet()) {
             Object val = entries.get(key);
             log.debug( "evaluation exp: {}", val);
-            final Object jpResult = JsonPath.parse(response).read(val.toString());
+            final Object jpResult;
+            try {
+                jpResult = JsonPath.parse(response).read(val.toString());
+            } catch (RuntimeException e ) {
+                log.error(e.getLocalizedMessage());
+                log.warn("eval:" + val + "-" + JsonFormatter.prettyPrint(response) );
+                continue;
+            }
             log.debug( "evaluated obj:" + jpResult);
             if (jpResult instanceof List && ((List<?>) jpResult).size() == 1) {
                 Object objVal = ((List<?>) jpResult).get(0);
@@ -119,7 +128,11 @@ public class ExecuteAction {
             } else {
                 StringBuilder jsonData = new StringBuilder();
                 JSONValue.writeJSONString(jpResult, jsonData);
-                variableContext.setVariable(key, jpResult);
+                if (jpResult instanceof Collection && ((Collection<?>) jpResult).isEmpty()) {
+                    variableContext.setNilVariable(key);
+                } else {
+                    variableContext.setVariable(key, jpResult);
+                }
                 variableContext.setVariable(key + DOT_JSON, jsonData.toString());
             }
             log.info("{} ASSIGN   {}{}={} {}({}){}",
@@ -145,9 +158,15 @@ public class ExecuteAction {
             // remove the variable from context first
             variable.remove(variableContext);
             final String exp = variable.resolveJsonValue(variableContext);
-            log.debug( "expectation exp: {}" , exp);
+            log.warn( "expectation exp: {}" , exp);
             final Expression expression = parser.parseExpression(exp);
-            final Object value = expression.getValue(context, Object.class);
+            final Object value;
+            try {
+                value = expression.getValue(context, Object.class);
+            } catch (RuntimeException e ) {
+                log.error(e.getLocalizedMessage());
+                continue;
+            }
             context.setVariable(variable.name(), value);
             final StringBuilder jsonData = new StringBuilder();
             JSONValue.writeJSONString(value, jsonData);

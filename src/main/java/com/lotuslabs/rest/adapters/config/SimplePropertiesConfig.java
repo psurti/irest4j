@@ -53,6 +53,9 @@ public class SimplePropertiesConfig {
         return s.propertyName.substring(s.separatorOffset);
     };
 
+    final Function<PropertyNameSeparator,String> nextMatch = s -> s.propertyName;
+
+
     final Function<PropertyNameSeparator,String> nextPartialMatch = s -> {
         String beginStr = s.propertyName.substring(0, s.separatorOffset - 1);
         final int i = beginStr.lastIndexOf('.', s.separatorOffset);
