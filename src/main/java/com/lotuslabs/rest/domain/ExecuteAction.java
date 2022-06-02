@@ -84,7 +84,8 @@ public class ExecuteAction {
                    VariableSet assignVariables, VariableSet evaluationVariables) throws IOException {
         variableContext.setVariable("status", statusCode);
         variableContext.setVariable("statusCode", statusCodeValue);
-        if (resultBody != null && resultBody.startsWith("{") && resultBody.endsWith("}") ||
+        if (    statusCodeValue == HttpStatus.NO_CONTENT.value() ||
+                resultBody != null && resultBody.startsWith("{") && resultBody.endsWith("}") ||
                 resultBody != null && resultBody.startsWith("[") && resultBody.endsWith("]")
         ) {
 

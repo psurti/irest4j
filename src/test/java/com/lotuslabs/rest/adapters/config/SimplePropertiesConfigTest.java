@@ -204,4 +204,21 @@ class SimplePropertiesConfigTest {
         System.out.println( "actual:" + actual );
         Assertions.assertIterableEquals(expected.keySet(), actual);
     }
+
+    @Test
+    void getRegexMatch() {
+        LinkedProperties p = new LinkedProperties();
+        p.setProperty("http.vars", "0");
+        p.setProperty("http.getAllPosts", "1");
+        p.setProperty("http.getAllPosts.assert[0]", "2");
+        p.setProperty("http.getAllPosts.assert[1]", "3");
+        final SimplePropertiesConfig propertiesConfig = new SimplePropertiesConfig(Paths.get("."), p);
+        final TreeMap<String, String> actual = new TreeMap<>(propertiesConfig.getRegexMatch(".*(assert\\[\\d+\\])"));
+        final TreeMap<String, String> expected = new TreeMap<>();
+        expected.put("assert[0]", "2");
+        expected.put("assert[1]", "3");
+        System.out.println( "expect:" + expected );
+        System.out.println( "actual:" + actual );
+        Assertions.assertIterableEquals(expected.entrySet(), actual.entrySet());
+    }
 }

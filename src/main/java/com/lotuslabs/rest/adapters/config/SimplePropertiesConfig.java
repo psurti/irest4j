@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class SimplePropertiesConfig {
@@ -107,6 +109,29 @@ public class SimplePropertiesConfig {
         return getProperties(nextPartialMatch, propertyPrefixes);
     }
 
+    public Map<String,String> getRegexMatch(String... regexMatches) {
+        return getRegexMatch(null, regexMatches);
+    }
+    public Map<String,String> getRegexMatch(Function<PropertyNameSeparator,String> fx, String... regexMatches) {
+        final Map<String,String> ret = new LinkedHashMap<>();
+        properties.forEach((k, v) -> {
+            for (String regexMatch : regexMatches) {
+                Pattern p = Pattern.compile(regexMatch);
+                final Matcher matcher = p.matcher(k);
+                final boolean matches = matcher.find();
+                if (matches) {
+                    PropertyNameSeparator pns = new PropertyNameSeparator();
+                    pns.propertyName = matcher.groupCount() >= 1 ?  matcher.group(1) : k;
+                    pns.separatorOffset = -1;
+                    final String newPropertyName = fx != null ? fx.apply(pns) : pns.propertyName;
+                    if (!newPropertyName.isEmpty()) {
+                        ret.put(newPropertyName, v);
+                    }
+                }
+            }
+        });
+        return ret;
+    }
     private Map<String,String> getProperties(Function<PropertyNameSeparator,String> fx, String... propertyPrefixes) {
         final Map<String,String> ret = new LinkedHashMap<>();
         properties.forEach((k, v) -> {
