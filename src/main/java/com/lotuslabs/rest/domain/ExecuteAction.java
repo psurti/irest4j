@@ -159,7 +159,7 @@ public class ExecuteAction {
             // remove the variable from context first
             variable.remove(variableContext);
             final String exp = variable.resolveJsonValue(variableContext);
-            log.warn( "expectation exp: {}" , exp);
+            log.debug( "expectation exp: {}" , exp);
             final Expression expression = parser.parseExpression(exp);
             final Object value;
             try {

@@ -52,31 +52,31 @@ public class Configuration implements Configurable {
 
     @Override
     public VariableSet getGlobalVariables() {
-        final Map<String, String> vars = propertiesConfig.startsWithProperties("vars.");
+        final Map<String, String> vars = propertiesConfig.getRegexMatch("vars.(.*)");
         return VariableSet.create(vars);
     }
 
     @Override
     public VariableSet getAllRequestVariables() {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http.vars."));
+        return VariableSet.create(propertiesConfig.getRegexMatch("http.vars.(.*)"));
     }
 
     @Override
     public VariableSet getRequestVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".vars."));
+        return VariableSet.create(propertiesConfig.getRegexMatch("http." + name + ".vars.(.*)"));
     }
 
     @Override
     public VariableSet getAssignVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.assign["));
+        return VariableSet.create(propertiesConfig.getRegexMatch("http." + name + ".response.assign\\[\\d+\\].(.*)"));
     }
 
     public VariableSet getEvaluateVariables(String name) {
-        return VariableSet.create(propertiesConfig.startsWithProperties("http." + name + ".response.eval["));
+        return VariableSet.create(propertiesConfig.getRegexMatch("http." + name + ".response.eval\\[\\d+\\].(.*)"));
     }
 
     public VariableSet getAssertVariables(String name) {
-        return VariableSet.create(propertiesConfig.nextPartialMatchProperties("http." + name + ".response.assert["));
+        return VariableSet.create(propertiesConfig.getRegexMatch("http." + name + ".response.(assert)[\\[\\]\\d+]*"));
     }
 
     public Variable getAbsUrl(String name) {
